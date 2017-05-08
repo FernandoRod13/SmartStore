@@ -64,6 +64,13 @@ public class Location {
 		this.aisleID = aisleID;
 	}
 	
+	public boolean isInfloor() {
+		return infloor;
+	}
+
+	public void setInfloor(boolean infloor) {
+		this.infloor = infloor;
+	}
 	
 
 }

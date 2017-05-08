@@ -5,19 +5,17 @@ public class Item {
 	private String name;
 	private double price;
 	private String category;
-	private Location location;
 	
-	public Item(String id, String name, String category, double price, Location location){
+	public Item(String id, String name, String category, double price){
 		super();
 		this.id = id;
 		this.name = name;
 		this.category = category;
 		this.price = price;
-		this.location = location;
 	}
 	
 	public Item(String[] splitfileLine) {
-		this(splitfileLine[1], splitfileLine[0], splitfileLine[3], Double.parseDouble(splitfileLine[2]), new Location(splitfileLine[4].split("\\-", -1)));
+		this(splitfileLine[1], splitfileLine[0], splitfileLine[3], Double.parseDouble(splitfileLine[2]));
 		
 	}
 
@@ -51,16 +49,6 @@ public class Item {
 
 	public void setCategory(String category) {
 		this.category = category;
-	}
-
-	public Location getLocation() {
-		return location;
-	}
-
-	public void setLocation(Location location) {
-		this.location = location;
-	}
-	
-	
+	}	
 	
 }
