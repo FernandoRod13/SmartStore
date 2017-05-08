@@ -15,11 +15,9 @@ public class SmartStore {
 	public static void main(String[] args) {
 		gondolas = new ArrayList<Gondola>();
 		inventory = new ArrayList<Item>();
-		// TODO Auto-generated method stub
 		try {
 			loadFileData();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		System.out.println(gondolas.size());
@@ -30,7 +28,7 @@ public class SmartStore {
 		File gondolaFile = new File("src/StoreLayout.txt");
 		try(BufferedReader br = new BufferedReader(new FileReader(gondolaFile))) {
 		    for(String line; (line = br.readLine()) != null; ) {
-		        if(!line.equals("isle|GID|isleGID|lvls")) {
+		        if(!line.equals("aisle|GID|aisleGID|lvls")) {
 		        	gondolas.add(new Gondola(line.split("\\|", -1)));
 		        }
 		    }
@@ -39,7 +37,7 @@ public class SmartStore {
 		File inventoryFile = new File("src/Inventory.txt");
 		try(BufferedReader br = new BufferedReader(new FileReader(inventoryFile))) {
 		    for(String line; (line = br.readLine()) != null; ) {
-		        if(!line.equals("Name|ID|Price|Category|StoreLocation > StoreLocation = GID-GSide-GLvl-isleGID-isleID")) {
+		        if(!line.equals("Name|ID|Price|Category|StoreLocation > StoreLocation = GID-GSide-GLvl-isleGID-isleID-inFloor")) {
 		        	inventory.add(new Item(line.split("\\|", -1)));
 		        }
 		    }

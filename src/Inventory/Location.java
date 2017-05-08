@@ -21,7 +21,7 @@ public class Location {
 	}
 	
 	public Location(String[] splitFileLine){
-		this(splitFileLine[0],splitFileLine[1],Integer.parseInt(splitFileLine[2]),splitFileLine[3],Integer.parseInt(splitFileLine[4]));
+		this(splitFileLine[0],splitFileLine[1],Integer.parseInt(splitFileLine[2]),splitFileLine[3],Integer.parseInt(splitFileLine[4]), Boolean.parseBoolean(splitFileLine[5]));
 	}
 
 	public String getGondolaID() {
