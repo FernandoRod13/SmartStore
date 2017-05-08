@@ -1,0 +1,3 @@
+Name|ID|Price|Category|StoreLocation > StoreLocation = GID-GSide-GLvl-isleGID-isleID
+French Fries|12jsh384|4.99|Frozen|a1-Left-2-a-1
+Apple|dghn28747nd|0.99|Fruit|a2-Left-2-a-2
