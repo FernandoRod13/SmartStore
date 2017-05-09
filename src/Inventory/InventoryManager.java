@@ -11,11 +11,11 @@ public class InventoryManager {
 		return instance;
 	}
 	
-	public void addInventory(Boolean inFloor, Item product, int amount) {
+	public void addInventory(Boolean inFloor, Location location, int amount) {
 		
 	}
 	
-	public void requestInventory(Boolean inFloor, Item product, int amount){
+	public void requestInventory(Boolean inFloor, Location location, int amount){
 		
 	}
 	
@@ -29,6 +29,24 @@ public class InventoryManager {
 	
 	public void removeInventory(Boolean inFloor, Item product, int amount){
 		
+	}
+	
+	private InventoryItem findItem(Location location) {
+		if (location.isInfloor()) {
+			Container c = floorInventory.get(location.getContainer());
+			if(location.isLeft()) {
+				return c.getLeft().getColumn().get(location.getColumn()).getItems().get(location.getRow());
+			}else {
+				return c.getRight().getColumn().get(location.getColumn()).getItems().get(location.getRow());
+			}
+		}else {
+			Container c = stockInventory.get(location.getContainer());
+			if(location.isLeft()) {
+				return c.getLeft().getColumn().get(location.getColumn()).getItems().get(location.getRow());
+			}else {
+				return c.getRight().getColumn().get(location.getColumn()).getItems().get(location.getRow());
+			}
+		}
 	}
 	
 }

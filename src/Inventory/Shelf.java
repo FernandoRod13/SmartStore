@@ -9,9 +9,8 @@ public class Shelf {
 	}
 	
 	
-	
 	public Shelf(String[] splitfileLine){
-		this(Integer.parseInt(splitfileLine[3]), splitfileLine[2], Integer.parseInt(splitfileLine[0]), splitfileLine[1]);
+
 	}
 
 
