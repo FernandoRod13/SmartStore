@@ -28,7 +28,7 @@ public class Column {
 	 */
 	public void setItem(InventoryItem item) {
 		items.set(item.getLocation().getRow(), item);
-		sensors.set(item.getLocation().getRow(), new Sensor(item.getItem(),item.getLocation(),item.getItem().getId()));
+		sensors.set(item.getLocation().getRow(), new Sensor(item,item.getLocation(),item.getItem().getId()));
 	}
 	
 	
