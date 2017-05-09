@@ -86,4 +86,12 @@ public class InventoryManager {
 			}
 		}
 	}
+	/**
+	 * This method is called by the sensor when the sensor receives a valid user interaction such as grabbing or returning an item
+	 * @param loc the location of the sensor
+	 * @param amount the amount of items return if positive or the amount of items taken if negative.
+	 */
+	public void recieveSensorNotification(Location loc, int amount) {
+		
+	}
 }
