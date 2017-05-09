@@ -4,7 +4,10 @@ import java.util.ArrayList;
 public class Column {
 	ArrayList<InventoryItem> items;
 	ArrayList<Sensor> sensors;
-	
+	/**
+	 * This constructor is only used when initializing the product to populate the store data structure with inventory
+	 * @param lvls number of rows in a column of a shelf
+	 */
 	public Column(int lvls) {
 		super();
 		items = new ArrayList<>();

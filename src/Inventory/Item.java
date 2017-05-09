@@ -13,7 +13,10 @@ public class Item {
 		this.category = category;
 		this.price = price;
 	}
-	
+	/**
+	 * This constructor is only used when initializing the product to populate the store data structure with inventory
+	 * @param splitFileLine a file line spliced into an array of components
+	 */
 	public Item(String[] splitfileLine) {
 		this(splitfileLine[0], splitfileLine[1], splitfileLine[3], Double.parseDouble(splitfileLine[2]));
 	}

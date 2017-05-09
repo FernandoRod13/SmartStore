@@ -8,7 +8,6 @@ import Inventory.Column;
 import Inventory.Container;
 import Inventory.InventoryItem;
 import Inventory.InventoryManager;
-import Inventory.Location;
 
 public class SmartStore {
 	
