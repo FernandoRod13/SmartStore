@@ -4,102 +4,87 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+<<<<<<< HEAD
 import Agents.User;
 import Inventory.InventoryManager;
 import Inventory.Item;
 import Inventory.Location;
 import Inventory.Shelf;
+=======
+import Inventory.Column;
+import Inventory.Container;
+import Inventory.InventoryItem;
+import Inventory.InventoryManager;
+>>>>>>> refs/remotes/origin/master
 
 public class SmartStore {
-	
-	public static ArrayList<Shelf> gondolas;
-	public static ArrayList<Item> inventory;
-	
+
+	public static ArrayList<Container> layout;
+
 	public static void main(String[] args) {
-		gondolas = new ArrayList<Shelf>();
-		inventory = new ArrayList<Item>();
+		layout = new ArrayList<Container>();
 		try {
 			loadFileData();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(gondolas.size());
-		System.out.println(inventory.size());
-		
-		//Mario Testing
-		InventoryManager im = InventoryManager.getInstance();
-		Location l;
-		//added French Fries 10
-		Item fries = inventory.get(0);
-		User user = new User("mario", "marito");
-		
-		
-		int total;
-				
-		try {
-			im.addNewInventory(fries, true, l = new Location(0, false, 0, 0, true),10, 30, 10);
-			System.out.println("User adds 6 fries in list");
-			//User wants 6 ff
-			user.addItemToList(fries, 6);
-			total = user.getAmountInGroceryList(fries);
-			System.out.println("Total in list " + total);
-			total = im.findItem(l).getAvailable();
-			System.out.println("Total in inventory " + total);
-			System.out.println();
-			
-			System.out.println("User puts 5 fries in cart");
-			user.takeItem(l, 5);
-			total = user.getAmountInVirtualCart(fries);
-			System.out.println("Total in cart " + total);
-			total = user.getAmountInGroceryList(fries);
-			System.out.println("Total in list " + total);
-			total = im.findItem(l).getAvailable();
-			System.out.println("Total in inventory " + total);
-			System.out.println();
-			
-			user.takeItem(l, 3);
-			total = user.getAmountInVirtualCart(fries);
-			System.out.println("Total in cart " + total);
-			total = user.getAmountInGroceryList(fries);
-			System.out.println("Total in list " + total);
-			total = im.findItem(l).getAvailable();
-			System.out.println("Total in inventory " + total);
-			System.out.println();
-			
-			user.returnItem(fries, l, 3);
-			System.out.println("Returned 3 from cart to inventory");
-			total = im.findItem(l).getAvailable();
-			System.out.println("Total in inventory "+total);
-			total = user.getAmountInVirtualCart(fries);
-			System.out.println("Total in cart " + total);
-			total = user.getAmountInGroceryList(fries);
-			System.out.println("Total in list " + total);
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+
+		System.out.println(layout.size());
 	}
-	
+	/**
+	 * This function populates the program with the initial data such as store layout data structure and inventory
+	 * @throws IOException file not found exception
+	 */
 	public static void loadFileData() throws IOException {
-		File gondolaFile = new File("src/StoreLayout.txt");
-		try(BufferedReader br = new BufferedReader(new FileReader(gondolaFile))) {
+		File layoutFile = new File("src/StoreLayout.txt");
+		try(BufferedReader br = new BufferedReader(new FileReader(layoutFile))) {
+			layout = new ArrayList<>();
 		    for(String line; (line = br.readLine()) != null; ) {
-		        if(!line.equals("aisle|GID|aisleGID|lvls")) {
-		        	gondolas.add(new Shelf(line.split("\\|", -1)));
+		        if(!line.equals("Container|isLeft|Columns|Levels")) {
+		        	layout = evaluateLayoutLine(line.split("\\|", -1), layout);
 		        }
 		    }
-		    
+
 		}
+		InventoryManager.getInstance().initStorage(layout);
+
 		File inventoryFile = new File("src/Inventory.txt");
 		try(BufferedReader br = new BufferedReader(new FileReader(inventoryFile))) {
 		    for(String line; (line = br.readLine()) != null; ) {
-		        if(!line.equals("Name|ID|Price|Category|StoreLocation > StoreLocation = GID-GSide-GLvl-isleGID-isleID-inFloor")) {
-		        	inventory.add(new Item(line.split("\\|", -1)));
+		        if(!line.equals("Item|Location|MinCap|MaxCap|Available > Item = ID-Name-Price-Category > Location = Container-isLeft-Column-Row-inStore")) {
+		        	InventoryItem item = new InventoryItem(line.split("\\|", -1));
+		        	InventoryManager.getInstance().getColumn(item.getLocation()).setItem(item);
 		        }
 		    }
-		    
+
 		}
 	}
+	/**
+	 * This function takes a line from a file that has been separated into components (specifically form the store layout file)
+	 * and initiates the data structure that reflects the layout of the store and where products are located.
+	 * @param splitFileLine file line separated into components
+	 * @param layout the current state of the layout data structure
+	 * @return the updated layout data structure
+	 */
+	private static ArrayList<Container> evaluateLayoutLine(String[] splitFileLine, ArrayList<Container> layout) {
+		int containerIndex = Integer.parseInt(splitFileLine[0]);
+		if (layout.size() <= containerIndex) {
+			layout.add(new Container());
+		}
+		Boolean isLeft = Boolean.parseBoolean(splitFileLine[1]);
+		int columnIndex = Integer.parseInt(splitFileLine[2]);
+		int maxLvls = Integer.parseInt(splitFileLine[3]);
+		if (isLeft) {
+			if (layout.get(containerIndex).getLeft().getColumn().size() <= columnIndex) {
+				layout.get(containerIndex).getLeft().getColumn().add(new Column(maxLvls));
+			}
+
+		}else {
+			if (layout.get(containerIndex).getRight().getColumn().size() <= columnIndex) {
+				layout.get(containerIndex).getRight().getColumn().add(new Column(maxLvls));
+			}
+		}
+		return layout;
+	}
+
 }

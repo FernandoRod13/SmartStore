@@ -1,3 +1,38 @@
-Name|ID|Price|Category|StoreLocation > StoreLocation = GID-GSide-GLvl-isleGID-isleID-inFloor
-French Fries|12jsh384|4.99|Frozen|a1-Left-2-a-1-true
-Apple|dghn28747nd|0.99|Fruit|a2-Left-2-a-2-true
+Item|Location|MinCap|MaxCap|Available > Item = ID-Name-Price-Category > Location = Container-isLeft-Column-Row-inStore
+a1sd34fk-apple-0.99-Fruit|0-true-0-0-true|2|10|10
+ksjsneio-orange-0.99-Fruit|0-true-0-1-true|2|10|10
+jask2929-banana-0.99-Fruit|0-true-0-2-true|2|10|10
+ksllejjf-ham-1.95-Meat|0-true-1-0-true|2|10|10
+128jfh74-waffles-2.99-Frozen|0-true-1-1-true|4|12|12
+273jf889-bread-2.50-Bread|0-true-1-2-true|2|16|16
+ksnndkjw-Tostitos-1.75-Chips|0-true-2-0-true|8|30|30
+hfnjk201-Medalla-1.00-Beer|0-true-2-1-true|10|40|40
+loshnrk2-black beans-1.35-Beans|0-true-2-2-true|10|40|40
+sndu0wj8-Chicken Breast-5.69-Meat|0-false-0-0-true|5|20|20
+mnsh7198-baby back ribs-8.99-Meat|0-false-0-1-true|3|10|10
+489dmsk9-T bone Steak-7.89-Meat|0-false-0-2-true|5|13|13
+hgdie84b-Butter-2.99-Dairy|0-false-1-0-true|8|20|20
+ernshi82-Milk-1.99-Dairy|0-false-1-1-true|5|15|15
+dasmn2i2-Sour Cream-1.85-Dairy|0-false-1-2|8|20|20
+xnjsieuj-Bacon-3.99-Meat|0-false-2-0-true|5|18|18
+5783jsmk-Lettuce-0.98-Vegetable|0-false-2-1-true|8|20|20
+usni3ibi-Tomatoes-0.56-Vegetable|0-false-2-2-true|10|40|40
+lskmio20-White Rice-2.50-Grains|1-true-0-0-true|8|20|20
+alkmjo1i-Celery-0.65-Vegetable|1-true-0-1-true|10|40|40
+vcxgsjio-Carrot-0.78-Vegetable|1-true-0-2-true|10|40|40
+snbiu399-Cesar Salad Dressing-2.87-Dressing|1-true-1-0-true|8|20|20
+sgehnjd2-Ranch Salad Dressing-2.89-Dressing|1-true-1-1-true|8|20|20
+meoind12-Italian Salad Dressing-2.65-Dressing|1-true-1-2-true|8|20|20
+lksno984-Salt-1.95-Spices|1-true-2-0-true|10|30|30
+iosn18h9-Black Pepper-1.84-Spices|1-true-2-1-true|8|20|20
+jslnk2jn-Parsley-1.79-1.66-Spices|1-true-2-2-true|8|20|20
+ksooinqi-Taco Shell-3.99-Mexican|1-false-0-0-true|5|15|15
+ghdo2i09-Taco Seasoning-0.95-Mexican|1-false-0-1-true|10|30|30
+poqpn038-Guacamole-1.50-Mexican|1-false-0-2-true|5|15|15
+lksk1893-Burrito Shell-2.99-Mexican|1-false-1-0-true|8|20|20
+mxbv918q-Fajita Seasoning-0.78-Mexican|1-false-1-1-true|5|15|15
+kxcbi274-Orange Juice-1.87-Juice|1-false-1-2-true|8|20|20
+hbsl2no0-Apple Juice-1.99-Juice|1-false-2-0-true|8|20|20
+snxb72b2-Fuite Juice-2.25-Juice|1-false-2-1-true|8|20|20
+azduni28-Cocacola-1.73-Soda|1-false-2-2-true|8|20|20
+

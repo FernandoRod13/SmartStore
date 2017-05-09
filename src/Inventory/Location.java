@@ -5,19 +5,23 @@ public class Location {
 	private boolean isLeft;
 	private int row;
 	private int container;
-	private boolean infloor;
+	private boolean inStore;
 	
-	public Location(int column, boolean isLeft, int row, int container, boolean infloor) {
+	public Location(int container, boolean isLeft, int column, int row, boolean inStore) {
 		super();
 		this.column = column;
 		this.isLeft = isLeft;
 		this.row = row;
 		this.container = container;
-		this.infloor = infloor;
+		this.inStore = inStore;
 	}
-
+	/**
+	 * This constructor is only used when initializing the product to populate the store data structure with inventory
+	 * @param splitFileLine a file line spliced into an array of components
+	 */
 	public Location(String[] splitFileLine){
-		//this(splitFileLine[0],splitFileLine[1],Integer.parseInt(splitFileLine[2]),splitFileLine[3],Integer.parseInt(splitFileLine[4]), Boolean.parseBoolean(splitFileLine[5]));
+		this(Integer.parseInt(splitFileLine[0]),Boolean.parseBoolean(splitFileLine[1]),Integer.parseInt(splitFileLine[2]),
+				Integer.parseInt(splitFileLine[3]),Boolean.parseBoolean(splitFileLine[4]));
 	}
 
 	public int getColumn() {
@@ -52,12 +56,12 @@ public class Location {
 		this.container = container;
 	}
 
-	public boolean isInfloor() {
-		return infloor;
+	public boolean isInStore() {
+		return inStore;
 	}
 
-	public void setInfloor(boolean infloor) {
-		this.infloor = infloor;
+	public void setInStore(boolean inStore) {
+		this.inStore = inStore;
 	}
 
 }

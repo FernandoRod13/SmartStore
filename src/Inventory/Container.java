@@ -8,7 +8,9 @@ public class Container {
 		this.left = left;
 		this.right = right;
 	}
-	
+	/**
+	 * This constructor is only used when initializing the product to populate the store data structure with inventory
+	 */
 	public Container() {
 		super();
 		this.left = new Shelf();
