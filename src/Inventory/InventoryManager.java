@@ -5,9 +5,10 @@ public class InventoryManager {
 	private ArrayList<Container> floorInventory;
 	private ArrayList<Container> stockInventory;
 	
-	private final InventoryManager instance = new InventoryManager();
+	private static InventoryManager instance = null;
 	
-	public InventoryManager getInstance() {
+	public static InventoryManager getInstance() {
+		if(instance == null) instance = new InventoryManager();
 		return instance;
 	}
 	
@@ -31,7 +32,7 @@ public class InventoryManager {
 		
 	}
 	
-	private InventoryItem findItem(Location location) {
+	public InventoryItem findItem(Location location) {
 		if (location.isInfloor()) {
 			Container c = floorInventory.get(location.getContainer());
 			if(location.isLeft()) {
