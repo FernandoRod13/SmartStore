@@ -1,3 +1,7 @@
-Name|ID|Price|Category|StoreLocation > StoreLocation = GID-GSide-GLvl-isleGID-isleID-inFloor
-French Fries|12jsh384|4.99|Frozen|a1-Left-2-a-1-true
-Apple|dghn28747nd|0.99|Fruit|a2-Left-2-a-2-true
+Item|Location|MinCap|MaxCap|Available > Item = ID-Name-Price-Category > Location = Container-isLeft-Column-Row-inStore
+a1sd34fk-apple-0.99-Fruit|0-true-0-0-true|2|10|10
+ksjsneio-orange-0.99-Fruit|0-true-0-1-true|2|10|10
+jask2929-banana-0.99-Fruit|0-true-0-2-true|2|10|10
+ksllejjf-ham-1.95-Meat|0-true-1-0-true|2|10|10
+128jfh74-waffles-2.99-Frozen|0-true-1-1-true|4|12|12
+273jf889-bread-2.50-Bread|0-true-1-2-true|2|16|16

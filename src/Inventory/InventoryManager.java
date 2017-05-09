@@ -2,7 +2,7 @@ package Inventory;
 import java.util.ArrayList;
 
 public class InventoryManager {
-	private ArrayList<Container> floorInventory;
+	private ArrayList<Container> storeInventory;
 	private ArrayList<Container> stockInventory;
 	
 	private static InventoryManager instance = null;
@@ -32,9 +32,14 @@ public class InventoryManager {
 		
 	}
 	
+	public void initStorage(ArrayList<Container> layout){
+		this.stockInventory = layout;
+		this.storeInventory = layout;
+	}
+	
 	public InventoryItem findItem(Location location) {
-		if (location.isInfloor()) {
-			Container c = floorInventory.get(location.getContainer());
+		if (location.isInStore()) {
+			Container c = storeInventory.get(location.getContainer());
 			if(location.isLeft()) {
 				return c.getLeft().getColumn().get(location.getColumn()).getItems().get(location.getRow());
 			}else {
@@ -49,5 +54,21 @@ public class InventoryManager {
 			}
 		}
 	}
-	
+	public Column getColumn(Location location) {
+		if (location.isInStore()) {
+			Container c = storeInventory.get(location.getContainer());
+			if(location.isLeft()) {
+				return c.getLeft().getColumn().get(location.getColumn());
+			}else {
+				return c.getRight().getColumn().get(location.getColumn());
+			}
+		}else {
+			Container c = stockInventory.get(location.getContainer());
+			if(location.isLeft()) {
+				return c.getLeft().getColumn().get(location.getColumn());
+			}else {
+				return c.getRight().getColumn().get(location.getColumn());
+			}
+		}
+	}
 }

@@ -15,8 +15,7 @@ public class Item {
 	}
 	
 	public Item(String[] splitfileLine) {
-		this(splitfileLine[1], splitfileLine[0], splitfileLine[3], Double.parseDouble(splitfileLine[2]));
-		
+		this(splitfileLine[0], splitfileLine[1], splitfileLine[3], Double.parseDouble(splitfileLine[2]));
 	}
 
 	public String getId() {

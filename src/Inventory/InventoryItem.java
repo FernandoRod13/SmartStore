@@ -15,6 +15,10 @@ public class InventoryItem {
 		this.maxCap = maxCap;
 		this.available = available;
 	}
+	public InventoryItem(String[] splitFileLine) {
+		this(new Item(splitFileLine[0].split("\\-", -1)), new Location(splitFileLine[1].split("\\-", -1)), 
+				Integer.parseInt(splitFileLine[2]), Integer.parseInt(splitFileLine[3]), Integer.parseInt(splitFileLine[4]));
+	}
 
 	public Item getItem() {
 		return item;
