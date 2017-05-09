@@ -7,13 +7,13 @@ public class InventoryManager {
 	
 	private static InventoryManager instance = null;
 	private InventoryManager(){
-		floorInventory = new ArrayList<>();
+		storeInventory = new ArrayList<>();
 		stockInventory = new ArrayList<>();
 		init();
 	}
 	
 	private void init(){
-		floorInventory.add(new Container());
+		storeInventory.add(new Container());
 	}
 	
 	public static InventoryManager getInstance() {
@@ -26,7 +26,7 @@ public class InventoryManager {
 		//decide what inventory will be managed
 		ArrayList<Container> inventory;
 		if(inFloor) 
-			inventory = floorInventory;
+			inventory = storeInventory;
 		else 
 			inventory = stockInventory;
 		
@@ -51,7 +51,7 @@ public class InventoryManager {
 		//Decide the inventory that will be managed
 		ArrayList<Container> inventory;
 		if(inFloor) 
-			inventory = floorInventory;
+			inventory = storeInventory;
 		else 
 			inventory = stockInventory;
 		//set the container
@@ -74,7 +74,7 @@ public class InventoryManager {
 	
 	public void requestInventory(Boolean inFloor, Location location, int amount){
 		ArrayList<Container> inventory;
-		if(inFloor) inventory = floorInventory;
+		if(inFloor) inventory = storeInventory;
 		else inventory = stockInventory;
 		Container c = inventory.get(location.getContainer());
 		Shelf s;

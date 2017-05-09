@@ -4,18 +4,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-<<<<<<< HEAD
-import Agents.User;
-import Inventory.InventoryManager;
-import Inventory.Item;
-import Inventory.Location;
-import Inventory.Shelf;
-=======
 import Inventory.Column;
 import Inventory.Container;
 import Inventory.InventoryItem;
 import Inventory.InventoryManager;
->>>>>>> refs/remotes/origin/master
 
 public class SmartStore {
 
