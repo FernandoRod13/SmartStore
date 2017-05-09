@@ -5,7 +5,9 @@ public class Shelf {
 	
 	
 	public Shelf() {
-		super();
+		column.add(new Column());
+		column.add(new Column());
+		column.add(new Column());
 	}
 	
 	
