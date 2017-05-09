@@ -31,15 +31,17 @@ public class SmartStore {
 		Location l;
 		//added French Fries 10
 		Item fries = inventory.get(0);
-		im.addNewInventory(fries, true,l = new Location(0, false, 0, 0, true),10, 30, 10);
 		User user = new User("mario", "marito");
+		
+		
 		int total;
 				
 		try {
+			im.addNewInventory(fries, true, l = new Location(0, false, 0, 0, true),10, 30, 10);
 			System.out.println("User adds 6 fries in list");
 			//User wants 6 ff
 			user.addItemToList(fries, 6);
-			total = user.getGroceryList().get(fries.getId()).getAmount();
+			total = user.getAmountInGroceryList(fries);
 			System.out.println("Total in list " + total);
 			total = im.findItem(l).getAvailable();
 			System.out.println("Total in inventory " + total);
@@ -47,9 +49,18 @@ public class SmartStore {
 			
 			System.out.println("User puts 5 fries in cart");
 			user.takeItem(l, 5);
-			total = user.getVirtualCart().get(fries.getId()).getAmount();
+			total = user.getAmountInVirtualCart(fries);
 			System.out.println("Total in cart " + total);
-			total = user.getGroceryList().get(fries.getId()).getAmount();
+			total = user.getAmountInGroceryList(fries);
+			System.out.println("Total in list " + total);
+			total = im.findItem(l).getAvailable();
+			System.out.println("Total in inventory " + total);
+			System.out.println();
+			
+			user.takeItem(l, 3);
+			total = user.getAmountInVirtualCart(fries);
+			System.out.println("Total in cart " + total);
+			total = user.getAmountInGroceryList(fries);
 			System.out.println("Total in list " + total);
 			total = im.findItem(l).getAvailable();
 			System.out.println("Total in inventory " + total);
@@ -59,9 +70,9 @@ public class SmartStore {
 			System.out.println("Returned 3 from cart to inventory");
 			total = im.findItem(l).getAvailable();
 			System.out.println("Total in inventory "+total);
-			total = user.getVirtualCart().get(fries.getId()).getAmount();
+			total = user.getAmountInVirtualCart(fries);
 			System.out.println("Total in cart " + total);
-			total = user.getGroceryList().get(fries.getId()).getAmount();
+			total = user.getAmountInGroceryList(fries);
 			System.out.println("Total in list " + total);
 			
 		} catch (Exception e) {

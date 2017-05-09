@@ -21,29 +21,52 @@ public class InventoryManager {
 		return instance;
 	}
 	
+	//used for add an amount of an existing item in inventory 
 	public void addInventory(Boolean inFloor, Location location, int amount){
+		//decide what inventory will be managed
 		ArrayList<Container> inventory;
-		if(inFloor) inventory = floorInventory;
-		else inventory = stockInventory;
+		if(inFloor) 
+			inventory = floorInventory;
+		else 
+			inventory = stockInventory;
+		
+		//set the container
 		Container c = inventory.get(location.getContainer());
+		
+		//set the shelf
 		Shelf s;
 		if(location.isLeft())
 			s  = c.getLeft();
-		else s = c.getRight();
-		InventoryItem item = s.getColumn().get(location.getColumn()).items.get(0);
-		item.setAvailable(item.getAvailable() + amount);
+		else 
+			s = c.getRight();
+		
+		//get the InventoryItem
+		InventoryItem item = s.getColumn().get(location.getColumn()).items.get(location.getRow());
+		item.setAvailable(item.getAvailable() + amount); //add items
 		
 	}
-	public void addNewInventory(Item i, Boolean inFloor, Location location,int min, int max, int amount) {
+	
+	//used to add a new Item in inventory
+	public void addNewInventory(Item i, Boolean inFloor, Location location,int min, int max, int amount) throws Exception {
+		//Decide the inventory that will be managed
 		ArrayList<Container> inventory;
-		if(inFloor) inventory = floorInventory;
-		else inventory = stockInventory;
+		if(inFloor) 
+			inventory = floorInventory;
+		else 
+			inventory = stockInventory;
+		//set the container
 		Container c = inventory.get(location.getContainer());
+		//set the Shelf
 		Shelf s;
 		if(location.isLeft())
 			s  = c.getLeft();
-		else s = c.getRight();
-		s.getColumn().get(location.getColumn()).items.add(new InventoryItem(i,location, min, max, amount));
+		else 
+			s = c.getRight();
+		
+		//if there is space
+		if(s.getColumn().get(location.getColumn()).items.size()<3)
+			s.getColumn().get(location.getColumn()).items.add(new InventoryItem(i,location, min, max, amount));
+		else throw new Exception("Can't add more items in this Column");
 		
 		
 		
