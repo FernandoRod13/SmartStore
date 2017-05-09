@@ -1,6 +1,9 @@
 package Inventory;
+import java.util.ArrayList;
 
 public class InventoryManager {
+	private ArrayList<Container> floorInventory;
+	private ArrayList<Container> stockInventory;
 	
 	private final InventoryManager instance = new InventoryManager();
 	

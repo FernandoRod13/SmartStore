@@ -4,16 +4,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import Inventory.Gondola;
+import Inventory.Shelf;
 import Inventory.Item;
 
 public class SmartStore {
 	
-	public static ArrayList<Gondola> gondolas;
+	public static ArrayList<Shelf> gondolas;
 	public static ArrayList<Item> inventory;
 	
 	public static void main(String[] args) {
-		gondolas = new ArrayList<Gondola>();
+		gondolas = new ArrayList<Shelf>();
 		inventory = new ArrayList<Item>();
 		try {
 			loadFileData();
@@ -29,7 +29,7 @@ public class SmartStore {
 		try(BufferedReader br = new BufferedReader(new FileReader(gondolaFile))) {
 		    for(String line; (line = br.readLine()) != null; ) {
 		        if(!line.equals("aisle|GID|aisleGID|lvls")) {
-		        	gondolas.add(new Gondola(line.split("\\|", -1)));
+		        	gondolas.add(new Shelf(line.split("\\|", -1)));
 		        }
 		    }
 		    
