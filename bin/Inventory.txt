@@ -13,7 +13,7 @@ mnsh7198-baby back ribs-8.99-Meat|0-false-0-1-true|3|10|10
 489dmsk9-T bone Steak-7.89-Meat|0-false-0-2-true|5|13|13
 hgdie84b-Butter-2.99-Dairy|0-false-1-0-true|8|20|20
 ernshi82-Milk-1.99-Dairy|0-false-1-1-true|5|15|15
-dasmn2i2-Sour Cream-1.85-Dairy|0-false-1-2|8|20|20
+dasmn2i2-Sour Cream-1.85-Dairy|0-false-1-2-true|8|20|20
 xnjsieuj-Bacon-3.99-Meat|0-false-2-0-true|5|18|18
 5783jsmk-Lettuce-0.98-Vegetable|0-false-2-1-true|8|20|20
 usni3ibi-Tomatoes-0.56-Vegetable|0-false-2-2-true|10|40|40
@@ -25,7 +25,7 @@ sgehnjd2-Ranch Salad Dressing-2.89-Dressing|1-true-1-1-true|8|20|20
 meoind12-Italian Salad Dressing-2.65-Dressing|1-true-1-2-true|8|20|20
 lksno984-Salt-1.95-Spices|1-true-2-0-true|10|30|30
 iosn18h9-Black Pepper-1.84-Spices|1-true-2-1-true|8|20|20
-jslnk2jn-Parsley-1.79-1.66-Spices|1-true-2-2-true|8|20|20
+jslnk2jn-Parsley-1.79-Spices|1-true-2-2-true|8|20|20
 ksooinqi-Taco Shell-3.99-Mexican|1-false-0-0-true|5|15|15
 ghdo2i09-Taco Seasoning-0.95-Mexican|1-false-0-1-true|10|30|30
 poqpn038-Guacamole-1.50-Mexican|1-false-0-2-true|5|15|15
@@ -35,4 +35,3 @@ kxcbi274-Orange Juice-1.87-Juice|1-false-1-2-true|8|20|20
 hbsl2no0-Apple Juice-1.99-Juice|1-false-2-0-true|8|20|20
 snxb72b2-Fuite Juice-2.25-Juice|1-false-2-1-true|8|20|20
 azduni28-Cocacola-1.73-Soda|1-false-2-2-true|8|20|20
-
