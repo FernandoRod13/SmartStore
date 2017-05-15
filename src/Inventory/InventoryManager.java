@@ -1,7 +1,39 @@
+
 package Inventory;
+
+import java.net.UnknownHostException;
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.ServerAddress;
+
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoCollection;
+
+import org.bson.Document;
+import java.util.Arrays;
+import com.mongodb.Block;
+
+import com.mongodb.client.MongoCursor;
+import static com.mongodb.client.model.Filters.*;
+import com.mongodb.client.result.DeleteResult;
+import static com.mongodb.client.model.Updates.*;
+import com.mongodb.client.result.UpdateResult;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
+
+
+
+
+
+
 
 public class InventoryManager {
+	
+	private MongoDatabase db;
+	private MongoCollection<Document> inventory;
+	
 	private ArrayList<Container> storeInventory;
 	private ArrayList<Container> stockInventory;
 	
@@ -12,7 +44,45 @@ public class InventoryManager {
 		return instance;
 	}
 	
+	public void  DBInit(){
+		 try{
+			 	// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
+			 
+			 	MongoClientURI uri  = new MongoClientURI("mongodb://dbuser:colegio@ds141401.mlab.com:41401/smartstore"); 
+		        MongoClient client = new MongoClient(uri);
+		        db = client.getDatabase(uri.getDatabase());
+		        inventory = db.getCollection("inventory"); 
+		        
+		        System.out.println("Succsesfully conected to DB: SmartStore");
+	         
+	      }catch(Exception e){
+	         System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+	      }
+	}
+	
+	
+	public void createInventory(){
+		try{
+		
+		Document canvas = new Document("name", "BBolitaaa")
+		        .append("qty", 200)
+		        .append("department", "Limpieza");
+		
+		inventory.insertOne(canvas);
+		System.out.println("Succsesfully Insert Items in Inventory");
+		
+		}
+		
+		catch(Exception e){
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+		}
+	}
+	
 	public void addInventory(Boolean inFloor, Location location, int amount) {
+		
+		
+		
+		
 		
 	}
 	
