@@ -11,9 +11,9 @@ import Inventory.InventoryManager;
 
 
 public class SmartStore {
-	
+
 	public static ArrayList<Container> layout;
-	
+
 	public static void main(String[] args) {
 		
 		
@@ -26,11 +26,11 @@ public class SmartStore {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		System.out.println(layout.size());
 	}
 	/**
-	 * This function populates the program with the initial data such as store layout data structure and inventory 
+	 * This function populates the program with the initial data such as store layout data structure and inventory
 	 * @throws IOException file not found exception
 	 */
 	public static void loadFileData() throws IOException {
@@ -42,14 +42,12 @@ public class SmartStore {
 		        	layout = evaluateLayoutLine(line.split("\\|", -1), layout);
 		        }
 		    }
-		    
+
 		}
 		InventoryManager.getInstance().initStorage(layout);
+
 		InventoryManager.getInstance().DBInit();
 		InventoryManager.getInstance().createInventory();
-		
-		
-		
 		
 		
 		File inventoryFile = new File("src/Inventory.txt");
@@ -60,7 +58,7 @@ public class SmartStore {
 		        	InventoryManager.getInstance().getColumn(item.getLocation()).setItem(item);
 		        }
 		    }
-		    
+
 		}
 	}
 	/**
@@ -82,7 +80,7 @@ public class SmartStore {
 			if (layout.get(containerIndex).getLeft().getColumn().size() <= columnIndex) {
 				layout.get(containerIndex).getLeft().getColumn().add(new Column(maxLvls));
 			}
-			
+
 		}else {
 			if (layout.get(containerIndex).getRight().getColumn().size() <= columnIndex) {
 				layout.get(containerIndex).getRight().getColumn().add(new Column(maxLvls));
@@ -90,5 +88,5 @@ public class SmartStore {
 		}
 		return layout;
 	}
-	
+
 }
