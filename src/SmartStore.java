@@ -9,14 +9,20 @@ import Inventory.Container;
 import Inventory.InventoryItem;
 import Inventory.InventoryManager;
 
+
 public class SmartStore {
 
 	public static ArrayList<Container> layout;
 
 	public static void main(String[] args) {
+		
+		
+		
+		
 		layout = new ArrayList<Container>();
 		try {
 			loadFileData();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -40,6 +46,10 @@ public class SmartStore {
 		}
 		InventoryManager.getInstance().initStorage(layout);
 
+		InventoryManager.getInstance().DBInit();
+		InventoryManager.getInstance().createInventory();
+		
+		
 		File inventoryFile = new File("src/Inventory.txt");
 		try(BufferedReader br = new BufferedReader(new FileReader(inventoryFile))) {
 		    for(String line; (line = br.readLine()) != null; ) {

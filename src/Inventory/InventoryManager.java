@@ -1,58 +1,113 @@
+
 package Inventory;
+
 import java.util.ArrayList;
 
+import org.bson.Document;
+
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+
+
+
+
+
+
+
 public class InventoryManager {
+
+	private MongoDatabase db;
+	private MongoCollection<Document> inventory;
+
 	private ArrayList<Container> storeInventory;
 	private ArrayList<Container> stockInventory;
-	
+
 	private static InventoryManager instance = null;
 	private InventoryManager(){
 		storeInventory = new ArrayList<>();
 		stockInventory = new ArrayList<>();
 		init();
 	}
-	
+
 	private void init(){
 		storeInventory.add(new Container());
 	}
-	
+
 	public static InventoryManager getInstance() {
 		if(instance == null) instance = new InventoryManager();
 		return instance;
 	}
-	
-	//used for add an amount of an existing item in inventory 
+
+
+
+	public void  DBInit(){
+		 try{
+			 	// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
+
+			 	MongoClientURI uri  = new MongoClientURI("mongodb://dbuser:colegio@ds141401.mlab.com:41401/smartstore");
+		        MongoClient client = new MongoClient(uri);
+		        db = client.getDatabase(uri.getDatabase());
+		        inventory = db.getCollection("inventory");
+
+		        System.out.println("Succsesfully conected to DB: SmartStore");
+
+	      }catch(Exception e){
+	         System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+	      }
+	}
+
+  //used for add an amount of an existing item in inventory
 	public void addInventory(Boolean inFloor, Location location, int amount){
 		//decide what inventory will be managed
 		ArrayList<Container> inventory;
-		if(inFloor) 
+		if(inFloor)
 			inventory = storeInventory;
-		else 
+		else
 			inventory = stockInventory;
-		
+
 		//set the container
 		Container c = inventory.get(location.getContainer());
-		
+
 		//set the shelf
 		Shelf s;
 		if(location.isLeft())
 			s  = c.getLeft();
-		else 
+		else
 			s = c.getRight();
-		
+
 		//get the InventoryItem
 		InventoryItem item = s.getColumn().get(location.getColumn()).items.get(location.getRow());
 		item.setAvailable(item.getAvailable() + amount); //add items
-		
+  }
+
+
+	public void createInventory(){
+		try{
+
+		Document canvas = new Document("name", "BBolitaaa")
+		        .append("qty", 200)
+		        .append("department", "Limpieza");
+
+		inventory.insertOne(canvas);
+		System.out.println("Succsesfully Insert Items in Inventory");
+
+		}
+
+		catch(Exception e){
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+		}
 	}
-	
+
+
 	//used to add a new Item in inventory
 	public void addNewInventory(Item i, Boolean inFloor, Location location,int min, int max, int amount) throws Exception {
 		//Decide the inventory that will be managed
 		ArrayList<Container> inventory;
-		if(inFloor) 
+		if(inFloor)
 			inventory = storeInventory;
-		else 
+		else
 			inventory = stockInventory;
 		//set the container
 		Container c = inventory.get(location.getContainer());
@@ -60,18 +115,18 @@ public class InventoryManager {
 		Shelf s;
 		if(location.isLeft())
 			s  = c.getLeft();
-		else 
+		else
 			s = c.getRight();
-		
+
 		//if there is space
 		if(s.getColumn().get(location.getColumn()).items.size()<3)
 			s.getColumn().get(location.getColumn()).items.add(new InventoryItem(i,location, min, max, amount));
 		else throw new Exception("Can't add more items in this Column");
-		
-		
-		
+
+
+
 	}
-	
+
 	public void requestInventory(Boolean inFloor, Location location, int amount){
 		ArrayList<Container> inventory;
 		if(inFloor) inventory = storeInventory;
@@ -84,17 +139,17 @@ public class InventoryManager {
 		InventoryItem im = s.getColumn().get(location.getColumn()).items.get(0);
 		im.setAvailable(im.getAvailable() - amount);
 	}
-	
+
 	public void removeExpiredInventory() {
-		
+
 	}
-	
+
 	public void changeProductLocation(Item item1, Item item2) {
-		
+
 	}
-	
+
 	public void removeInventory(Boolean inFloor, Item product, int amount){
-		
+
 	}
 	/**
 	 * This function is used to initiate the store layout data structure for stock inventory and store inventory
@@ -104,7 +159,7 @@ public class InventoryManager {
 		this.stockInventory = layout;
 		this.storeInventory = layout;
 	}
-	
+
 	/**
 	 * This function is the main function used to find items were every they are whether it be in store or in stock
 	 * @param location location of the object
@@ -127,7 +182,7 @@ public class InventoryManager {
 			}
 		}
 	}
-	
+
 	/**
 	 * This function is used to get the column of a specific location (mainly to add inventory to the specific row of said column).
 	 * this function is implemented in the loadDataFromFiles in smartStore
@@ -157,6 +212,6 @@ public class InventoryManager {
 	 * @param amount the amount of items return if positive or the amount of items taken if negative.
 	 */
 	public void recieveSensorNotification(Location loc, int amount) {
-		
+
 	}
 }
