@@ -12,9 +12,9 @@ import Inventory.InventoryManager;
 import Inventory.Location;
 
 public class SmartStore {
-	
+
 	public static ArrayList<Container> layout;
-	
+
 	public static void main(String[] args) {
 		
 		
@@ -27,14 +27,15 @@ public class SmartStore {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		System.out.println(layout.size());
 	}
 	/**
-	 * This function populates the program with the initial data such as store layout data structure and inventory 
+	 * This function populates the program with the initial data such as store layout data structure and inventory
 	 * @throws IOException file not found exception
 	 */
 	public static void loadFileData() throws IOException {
+
 //		File layoutFile = new File("src/StoreLayout.txt");
 //		try(BufferedReader br = new BufferedReader(new FileReader(layoutFile))) {
 //			layout = new ArrayList<>();
@@ -47,8 +48,21 @@ public class SmartStore {
 //		}
 		
 		
-		InventoryManager.getInstance().DBInit();
+
+		File layoutFile = new File("src/StoreLayout.txt");
+		try(BufferedReader br = new BufferedReader(new FileReader(layoutFile))) {
+			layout = new ArrayList<>();
+		    for(String line; (line = br.readLine()) != null; ) {
+		        if(!line.equals("Container|isLeft|Columns|Levels")) {
+		        	layout = evaluateLayoutLine(line.split("\\|", -1), layout);
+		        }
+		    }
+
+		}
 		
+
+
+		InventoryManager.getInstance().DBInit();
 		
 		Location newLocation = new Location(2,false,1,3);
 		
@@ -56,6 +70,9 @@ public class SmartStore {
 		//		100, 23.56, "ropa",16.78);
 		
 		InventoryManager.getInstance().getSingleItem(newLocation);
+		InventoryManager.getInstance().userBuysItem(newLocation, 20);
+		InventoryManager.getInstance().minimunCapacityReach(newLocation);
+		InventoryManager.getInstance().needToBringItemsToFloor(newLocation);
 		
 		
 		
@@ -74,6 +91,18 @@ public class SmartStore {
 //		    }
 		    
 //		}
+
+//		File inventoryFile = new File("src/Inventory.txt");
+//		try(BufferedReader br = new BufferedReader(new FileReader(inventoryFile))) {
+//		    for(String line; (line = br.readLine()) != null; ) {
+//		        if(!line.equals("Item|Location|MinCap|MaxCap|Available > Item = ID-Name-Price-Category > Location = Container-isLeft-Column-Row-inStore")) {
+//		        	InventoryItem item = new InventoryItem(line.split("\\|", -1));
+//		        	InventoryManager.getInstance().getColumn(item.getLocation()).setItem(item);
+//		        }
+//		    }
+//
+//		}
+
 	}
 	/**
 	 * This function takes a line from a file that has been separated into components (specifically form the store layout file)
@@ -94,7 +123,7 @@ public class SmartStore {
 			if (layout.get(containerIndex).getLeft().getColumn().size() <= columnIndex) {
 				layout.get(containerIndex).getLeft().getColumn().add(new Column(maxLvls));
 			}
-			
+
 		}else {
 			if (layout.get(containerIndex).getRight().getColumn().size() <= columnIndex) {
 				layout.get(containerIndex).getRight().getColumn().add(new Column(maxLvls));
@@ -102,5 +131,5 @@ public class SmartStore {
 		}
 		return layout;
 	}
-	
+
 }
