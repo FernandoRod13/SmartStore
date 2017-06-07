@@ -5,7 +5,7 @@ public class Location {
 	private boolean isLeft;
 	private int row;
 	private int container;
-	private boolean inStore;
+	
 	
 	public Location(int container, boolean isLeft, int column, int row) {
 		super();
@@ -56,17 +56,12 @@ public class Location {
 		this.container = container;
 	}
 
-	public boolean isInStore() {
-		return inStore;
-	}
-
-	public void setInStore(boolean inStore) {
-		this.inStore = inStore;
-	}
+	
+	
 	@Override
 	public String toString() {
-		return "Location [column=" + column + ", isLeft=" + isLeft + ", row=" + row + ", container=" + container
-				+ ", inStore=" + inStore + "]";
+		return "Location [container = " + container + ", isLeft= " + isLeft + ", column= " + column +
+				", row=" + row + "]";
 	}
 	
 }

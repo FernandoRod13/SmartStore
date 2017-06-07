@@ -2,10 +2,7 @@
 package Inventory;
 
 
-
 import java.net.UnknownHostException;
-
-
 
 import com.mongodb.MongoClient;
 
@@ -13,13 +10,9 @@ import com.mongodb.MongoClientURI;
 
 import com.mongodb.ServerAddress;
 
-
-
 import com.mongodb.client.MongoDatabase;
 
 import com.mongodb.client.MongoCollection;
-
-
 
 import org.bson.Document;
 
@@ -27,13 +20,9 @@ import org.bson.conversions.Bson;
 
 import org.bson.types.ObjectId;
 
-
-
 import java.util.Arrays;
 
 import com.mongodb.Block;
-
-
 
 import com.mongodb.client.MongoCursor;
 
@@ -53,572 +42,606 @@ import java.util.Arrays;
 
 
 
-
-
 public class InventoryManager {
 
 
-private MongoDatabase db;
+	private MongoDatabase db;
 
-private MongoCollection<Document> inventory;
+	private MongoCollection<Document> inventory;
 
+	private static InventoryManager instance = null;
 
-private ArrayList<Container> storeInventory;
+	public static InventoryManager getInstance() {
 
-private ArrayList<Container> stockInventory;
+		if(instance == null) instance = new InventoryManager();
 
+		return instance;
 
-private static InventoryManager instance = null;
+	}
 
+	/**
 
-public static InventoryManager getInstance() {
+	 * This method create the connection to the database
 
-if(instance == null) instance = new InventoryManager();
+	 */
 
-return instance;
+	public void  DBInit(){
 
-}
+		try{
 
-/**
+			// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
 
-* This method create the connection to the database
 
-*/
 
-public void  DBInit(){
+			MongoClientURI uri  = new MongoClientURI("mongodb://dbuser:colegio@ds141401.mlab.com:41401/smartstore"); 
 
-try{
+			MongoClient client = new MongoClient(uri);
 
-// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname
+			db = client.getDatabase(uri.getDatabase());
 
- 
+			inventory = db.getCollection("inventory"); 
 
-MongoClientURI uri  = new MongoClientURI("mongodb://dbuser:colegio@ds141401.mlab.com:41401/smartstore"); 
 
-        MongoClient client = new MongoClient(uri);
 
-        db = client.getDatabase(uri.getDatabase());
+			System.out.println("Succsesfully conected to DB: SmartStore: Inventory Manager Collection");
 
-        inventory = db.getCollection("inventory"); 
 
-       
 
-        System.out.println("Succsesfully conected to DB: SmartStore");
+		}catch(Exception e){
 
-         
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-      }catch(Exception e){
+		}
 
-        System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+	}
 
-      }
+	/**
 
-}
+	 * Insert an item into the DataBase
 
-/**
+	 * @param itemLocation
 
-* Insert an item into the DataBase
+	 * @param name
 
-* @param itemLocation
+	 * @param mincap
 
-* @param name
+	 * @param maxcap
 
-* @param mincap
+	 * @param inStoreAvailable
 
-* @param maxcap
+	 * @param stockAvailable
 
-* @param inStsoreAvailable
+	 * @param retailPrice
 
-* @param stockAvailable
+	 * @param category
 
-* @param retailPrice
+	 * @param cost
 
-* @param category
+	 */
 
-* @param cost
+	public void addInventory(Location itemLocation, String name, int mincap, int maxcap, int inStoreAvailable,
 
-*/
+			int stockAvailable, double retailPrice, String category, double cost) {
 
-public void addInventory(Location itemLocation, String name, int mincap, int maxcap, int inStsoreAvailable,
 
-int stockAvailable, double retailPrice, String category, double cost) {
+		try{
 
+			Document location = convertLocationToDocument(itemLocation);
 
-try{
+			Document newItem = new Document("name", name)
+					.append("mincap", mincap)
+					.append("maxcap", maxcap)
+					.append("inStoreAvailable", inStoreAvailable)
+					.append("inStockAvailable", stockAvailable)
+					.append("retailPrice", retailPrice)
+					.append("cost", cost)
+					.append("category", category)
+					.append("location", location);
 
-Document location = convertLocationToDocument(itemLocation);
+			inventory.insertOne(newItem);
+		}
+		catch(Exception e){
 
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+		}
+	}
 
-Document newItem = new Document("name", name)
 
-        .append("mincap", mincap)
+	/**
 
-        .append("maxcap", maxcap)
+	 * Get all the items in the inventory
 
-        .append("inStoreAvailable", inStsoreAvailable)
+	 * @return all the items in the inventory
 
-        .append("inStockAvailable", stockAvailable)
+	 */
 
-        .append("retailPrice", retailPrice)
+	public ArrayList<Item> getAllItems(){
 
-        .append("cost", cost)
 
-        .append("category", category)
+		List<Document> allItemsDoc = null;
+		ArrayList<Item> allItems = new ArrayList<>();
+		try{
 
-        .append("location", location);
+			allItemsDoc = (List<Document>) inventory.find().into(
 
-       
+					new ArrayList<Document>());
 
-inventory.insertOne(newItem);
+			for(Document document : allItemsDoc){
+			Item item = convertDocumentToItem(document);
+			
+			System.out.println(item);
+			System.out.println("\n");
+			allItems.add(item);
 
+			}             
+		}
 
-}
+		catch(Exception e){
 
-catch(Exception e){
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+		}
+		return allItems;
+	}
 
-System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-}
+	/**
 
-}
+	 * It looks for the item that have that location in the Database
 
+	 * @param itemLocation
 
+	 * @return The information of the item that is find in that location
 
-/**
+	 */
 
-* Get all the items in the inventory
+	public Item getSingleItem(Location itemLocation){
 
-* @return all the items in the inventory
+		List<Document> items = null;
 
-*/
+		Document location = convertLocationToDocument(itemLocation);
 
-public List<Document> getAllItems(){
+		Document item = null;
 
+		try{
 
-List<Document> allItems = null;
 
-try{
 
-allItems = (List<Document>) inventory.find().into(
+			items = (List<Document>) inventory.find(eq("location", location)).into(new ArrayList<Document>());
 
-new ArrayList<Document>());
 
- 
+			item = items.get(0);
 
-              for(Document document : allItems){
+			System.out.println("Search Successfully");
 
-           	  System.out.println("All items are");
+			System.out.println(IDToString(item));
 
-                  System.out.println(document);
 
-              }             
+		}
 
-}
+		catch(Exception e){
 
-catch(Exception e){
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+		}
 
-}
+		return convertDocumentToItem(item);
 
-return allItems;
+	}
 
-}
 
 
+	/**
 
-/**
+	 * Method to know if they currently amount in the floor is enough
 
-* It looks for the item that have that location in the Database
+	 * @param itemLocation
 
-* @param itemLocation
+	 * @return
 
-* @return The information of the item that is find in that location
+	 */
 
-*/
+	public boolean needToBringItemsToFloor(Location itemLocation){
 
-public Document getSingleItem(Location itemLocation){
 
-List<Document> items = null;
+		try{
 
-Document location = convertLocationToDocument(itemLocation);
+			Item item = getInstance().getSingleItem(itemLocation);
 
-Document item = null;
+			int amountInFloor = item.getInStsoreAvailable();
 
-try{
 
 
+			if(10 > amountInFloor){
 
-items = (List<Document>) inventory.find(eq("location", 
+				System.out.println("You have to move some items from the stock to the floor");
 
-location)).into(new ArrayList<Document>());
+				return true;
 
+			}
 
-item = items.get(0);
+			else{
 
-System.out.println("Search Successfully");
+				System.out.println("The floor is good for now");
 
-System.out.println(IDToString(item));
+				return false;
 
+			}
 
-}
+		}
 
-catch(Exception e){
+		catch(Exception e){
 
-System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-}
+			return false;
 
-return item;
+		}
 
-}
+	}
 
 
 
-/**
+	/**
 
-* Method to know if they currently amount in the floor is enough
+	 * Method to transfer amount of items from the stock to the floor
 
-* @param itemLocation
+	 * @param ammountToTransfer the amount to transfer from the stock to the floor
 
-* @return
+	 * @param itemLocation the location of the item 
 
-*/
+	 * @return
 
-public boolean needToBringItemsToFloor(Location itemLocation){
+	 */
 
+	public boolean transferFromStockToFloor(int ammountToTransfer,Location itemLocation){
 
-try{
+		Document location = convertLocationToDocument(itemLocation);
 
-Document item = getInstance().getSingleItem(itemLocation);
+		Item item = null;
 
-int amountInFloor = item.getInteger("inStoreAvailable");
+		try{
 
+			item = getInstance().getSingleItem(itemLocation);
 
 
-if(10 > amountInFloor){
+			int currentInStoreValue = item.getInStsoreAvailable();
 
-System.out.println("You have to move some items from the stock to the floor");
+			int currentInStockValue = item.getStockAvailable();
 
-return true;
 
-}
+			inventory.findOneAndUpdate(eq("location", location),
 
-else{
+					combine(set("inStoreAvailable",currentInStoreValue + ammountToTransfer ),
 
-System.out.println("The floor is good for now");
+							set("inStockAvailable", currentInStockValue - ammountToTransfer )));
 
-return false;
+			System.out.println("File updated Successfully");
 
-}
 
-}
+		}
 
-catch(Exception e){
+		catch(Exception e){
 
-System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-return false;
+			return false;
 
-}
+		}
 
-}
+		return true;
 
+	}
 
 
-/**
+	/**
 
-* Method to transfer amount of items from the stock to the floor
+	 * 
 
-* @param ammountToTransfer the amount to transfer from the stock to the floor
+	 * This method change the location of an item, remember that the "Gondolas" have the same location TAG in the Floor
 
-* @param itemLocation the location of the item 
+	 * And in the stock, this is to make it easier to find in both sides
 
-* @return
+	 * @param newLocation the new location where the item is going to be put in the Store and in the stock
 
-*/
+	 * @param currentLocation
 
-public boolean transferFromStockToFloor(int ammountToTransfer,Location itemLocation){
+	 * @return true if the transaction is complete false otherwise
 
-Document location = convertLocationToDocument(itemLocation);
+	 * 
 
-Document item = null;
+	 */
 
-try{
+	public boolean updateLocation(Location newLocation, Location currentLocation){
 
-item = getInstance().getSingleItem(itemLocation);
+		Document newLocationDocument = convertLocationToDocument(newLocation);
 
+		Document currentLocationDocument = convertLocationToDocument(currentLocation);
 
-int currentInStoreValue = item.getInteger("inStoreAvailable");
 
-int currentInStockValue = item.getInteger("inStockAvailable");
+		try{
 
+			inventory.findOneAndUpdate(eq("location", currentLocationDocument),
 
-inventory.findOneAndUpdate(eq("location", location),
+					combine(set("location", newLocationDocument )));
 
-combine(set("inStoreAvailable",currentInStoreValue + ammountToTransfer ),
+			System.out.println("File updated Successfully");
 
-set("inStockAvailable", currentInStockValue - ammountToTransfer )));
+		}
 
-System.out.println("File updated Successfully");
+		catch(Exception e){
 
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-}
+			return false;
 
-catch(Exception e){
+		}
 
-System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-return false;
+		return true;
 
-}
+	}
 
-return true;
 
-}
 
+	/**
 
-/**
+	 * This method check if the minimum amount of items has been reached,if this happens 
 
-* 
+	 * it return a true indicating to the inventory manager that he needs to buy more items
 
-* This method change the location of an item, remember that the "Gondolas" have the same location TAG in the Floor
+	 * @param itemLocation
 
-* And in the stock, this is to make it easier to find in both sides
+	 * @return
 
-* @param newLocation the new location where the item is going to be put in the Store and in the stock
+	 */
 
-* @param currentLocation
+	public boolean minimunCapacityReach(Location itemLocation){
 
-* @return true if the transaction is complete false otherwise
 
-* 
+		try{
 
-*/
+			Item item = getInstance().getSingleItem(itemLocation);
 
-public boolean updateLocation(Location newLocation, Location currentLocation){
+			int minimumRequired = item.getMincap();
 
-Document newLocationDocument = convertLocationToDocument(newLocation);
+			int currentlyTotalAmount = item.getInStsoreAvailable() + item.getStockAvailable();
 
-Document currentLocationDocument = convertLocationToDocument(currentLocation);
 
 
-try{
+			if(minimumRequired > currentlyTotalAmount){
 
-inventory.findOneAndUpdate(eq("location", currentLocationDocument),
+				System.out.println("You have to buy more items for the stock");
 
-combine(set("location", newLocationDocument )));
+				return true;
 
-System.out.println("File updated Successfully");
+			}
 
-}
+			else{
 
-catch(Exception e){
+				System.out.println("The stock is good for now");
 
-System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+				return true;
 
-return false;
+			}
 
-}
+		}
 
+		catch(Exception e){
 
-return true;
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-}
+			return false;
 
+		}
 
+	}
 
-/**
 
-* This method check if the minimum amount of items has been reached,if this happens 
 
-* it return a true indicating to the inventory manager that he needs to buy more items
+	/**
 
-* @param itemLocation
+	 * When the user attempt to buy an item the inventory subtracts those items
 
-* @return
+	 * from the inventory 
 
-*/
+	 * @param itemLocation
 
-public boolean minimunCapacityReach(Location itemLocation){
+	 * @param amount
 
+	 */
 
-try{
+	public void userBuysItem(Location itemLocation, int amount){
 
-Document item = getInstance().getSingleItem(itemLocation);
+		Document location = convertLocationToDocument(itemLocation);
 
-int minimumRequired = item.getInteger("mincap");
 
-int currentlyTotalAmount = item.getInteger("inStoreAvailable") + item.getInteger("inStockAvailable");
+		try{
 
+			Item item = getInstance().getSingleItem(itemLocation);
 
 
-if(minimumRequired > currentlyTotalAmount){
+			int currentInStoreValue = item.getInStsoreAvailable();
 
-System.out.println("You have to buy more items for the stock");
+			int newAmount = currentInStoreValue - amount;
 
-return true;
 
-}
+			inventory.findOneAndUpdate(eq("location", location),
 
-else{
+					combine(set("inStoreAvailable",newAmount )));
 
-System.out.println("The stock is good for now");
 
-return true;
+			System.out.println("After the user buys the item the file was updated Successfully");
 
-}
+		}
 
-}
+		catch(Exception e){
 
-catch(Exception e){
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-return false;
+		}
 
-}
 
-}
+	}
+	
+	/**
+	 * This method is call when The user returns the item 
+	 * @param itemLocation
+	 * @param amount
+	 */
+	public void userReturnsItem(Location itemLocation, int amount){
 
+		Document location = convertLocationToDocument(itemLocation);
 
 
-/**
+		try{
 
-* When the user attempt to buy an item the inventory subtracts those items
+			Item item = getInstance().getSingleItem(itemLocation);
 
-* from the inventory 
 
-* @param itemLocation
+			int currentInStoreValue = item.getInStsoreAvailable();
 
-* @param amount
+			int newAmount = currentInStoreValue + amount;
 
-*/
 
-public void userBuysItem(Location itemLocation, int amount){
+			inventory.findOneAndUpdate(eq("location", location),
 
-Document location = convertLocationToDocument(itemLocation);
+					combine(set("inStoreAvailable",newAmount )));
 
 
-try{
+			System.out.println("After the user returns the item the file was updated Successfully");
 
-Document item = getInstance().getSingleItem(itemLocation);
+		}
 
+		catch(Exception e){
 
-int currentInStoreValue = item.getInteger("inStoreAvailable");
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 
-int newAmount = currentInStoreValue - amount;
 
+		}
 
-inventory.findOneAndUpdate(eq("location", location),
+	}
+	
 
-combine(set("inStoreAvailable",newAmount )));
 
 
-System.out.println("After the user buys the item the file was updated Successfully");
+	/**
 
-}
+	 * This piece of code is use many times in the class so i made it a method
 
-catch(Exception e){
+	 * @param location
 
-System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+	 * @return
 
+	 */
 
-}
+	public Document convertLocationToDocument(Location location){
 
+		Document newLocation = new Document("container",location.getContainer())
 
-}
+				.append("isLeft", location.isLeft())
 
+				.append("column", location.getColumn())
 
+				.append("row", location.getRow());
 
-/**
+		return newLocation;
 
-* This piece of code is use many times in the class so i made it a method
+	}
+	
+	/**
+	 * This method convert the Document Object to Item object
+	 * @param item
+	 * @return
+	 */
+	public Item convertDocumentToItem(Document item) {
+		Item newItem = null;
+		try{
+			
+		String objectID = "" + item.getObjectId("_id");
+		Document locationDoc = item.get("location",Document.class);
+		
+		int container = locationDoc.getInteger("container");
+		boolean isLeft = locationDoc.getBoolean("isLeft");
+		int column = locationDoc.getInteger("column");
+		int row = locationDoc.getInteger("row");
+		
+		Location location = new Location(container, isLeft, column, row);
+	
+		newItem = new Item(objectID, item.getString("name"), item.getDouble("retailPrice"),
+				item.getString("category"), item.getInteger("mincap"),item.getInteger("maxcap"),
+				item.getInteger("inStoreAvailable"),item.getInteger("inStockAvailable"),item.getDouble("cost"),
+				location);
+		}
+		catch(Exception e){
 
-* @param location
+			System.err.println("Error " +  e.getClass().getName() + ": " + e.getMessage() );
+		}
+		
+		return newItem;
+	}
 
-* @return
 
-*/
+	/**
 
-public Document convertLocationToDocument(Location location){
+	 * This method returns a pretty String of the Item Document(ID)
 
-Document newLocation = new Document("container",location.getContainer())
+	 * @param item
 
-.append("isLeft", location.isLeft())
+	 * @return
 
-.append("column", location.getColumn())
+	 */
 
-.append("row", location.getRow());
+	public String IDToString(Document item){
 
-return newLocation;
 
-}
+		String result = "Item ID: "  + item.getObjectId("_id") + "\n";
 
+		result = result + "Name: " + item.getString("name") + "\n";
 
-/**
+		result = result + "Minimum capacity: "  + item.getInteger("mincap") +  "\n";
 
-* This method returns a pretty String of the Item Document(ID)
+		result = result + "Maximum capacity: "  + item.getInteger("maxcap") +  "\n";
 
-* @param item
+		result = result + "Items available in Store: " + item.getInteger("inStoreAvailable") +  "\n";
 
-* @return
+		result = result + "Items available in Stock: " + item.getInteger("inStockAvailable") +  "\n";
 
-*/
+		result = result + "Retail Price: " + item.getDouble("retailPrice") +  "\n";
 
-public String IDToString(Document item){
+		result = result + "Cost of the item to store: " + item.getDouble("cost") +  "\n";
 
+		result = result + "Category: " + item.getString("category") +  "\n";
 
-String result = "Item ID: "  + item.getObjectId("_id") + "\n";
 
-result = result + "Name: " + item.getString("name") + "\n";
+		return result;
 
-result = result + "Minimum capacity: "  + item.getInteger("mincap") +  "\n";
+	}
 
-result = result + "Maximum capacity: "  + item.getInteger("maxcap") +  "\n";
+	/**
 
-result = result + "Items available in Store: " + item.getInteger("inStoreAvailable") +  "\n";
+	 * This method return a pretty String of the Location Document
 
-result = result + "Items available in Stock: " + item.getInteger("inStockAvailable") +  "\n";
+	 * @param location
 
-result = result + "Retail Price: " + item.getDouble("retailPrice") +  "\n";
+	 * @return
 
-result = result + "Cost of the item to store: " + item.getDouble("cost") +  "\n";
+	 */
 
-result = result + "Category: " + item.getString("category") +  "\n";
+	public String LDToString(Document location){
 
+		String result = "Container: " + location.getString("container") + " ";
 
-return result;
+		result = result + "Left : " + location.getBoolean("isLeft") + " ";
 
-}
+		result = result + "Column : " + location.getInteger("column") + " ";
 
-/**
+		result = result + "Row : " + location.getInteger("row") + "\n";
 
-* This method return a pretty String of the Location Document
 
-* @param location
+		return result;
 
-* @return
-
-*/
-
-public String LDToString(Document location){
-
-String result = "Container: " + location.getString("container") + " ";
-
-result = result + "Left : " + location.getBoolean("isLeft") + " ";
-
-result = result + "Column : " + location.getInteger("column") + " ";
-
-result = result + "Row : " + location.getInteger("row") + "\n";
-
-
-return result;
-
-}
-
-
-
+	}
 
 }
 

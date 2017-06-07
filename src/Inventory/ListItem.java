@@ -1,18 +1,19 @@
 package Inventory;
 
 public class ListItem {
-	private Item product;
+	private Item item;
 	private int amount;
-	public ListItem(Item product, int amount) {
+	
+	public ListItem(Item item, int amount) {
 		super();
-		this.product = product;
+		this.item = item;
 		this.amount = amount;
 	}
-	public Item getProduct() {
-		return product;
+	public Item getItem() {
+		return item;
 	}
-	public void setProduct(Item product) {
-		this.product = product;
+	public void setItem(Item product) {
+		this.item = product;
 	}
 	public int getAmount() {
 		return amount;
