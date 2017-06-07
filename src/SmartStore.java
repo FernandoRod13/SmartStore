@@ -23,21 +23,24 @@ public class SmartStore {
 			InventoryManager invMang = InventoryManager.getInstance();
 			UserManager userManager = UserManager.getInstance();
 			
-			userManager.addUserToDB("Cristian", "Melendez");
+			invMang.DBInit();
+			userManager.DBInit();
 			
-			userManager.addUserToDB("Martito", "Melendez");			// Por que ustedes son mis hijos jaja
-			userManager.addUserToDB("Fernando", "Melendez");
+//			userManager.addUserToDB("Cristian", "Melendez");
+//			
+//			userManager.addUserToDB("Martito", "Melendez");			// Por que ustedes son mis hijos jaja
+//			userManager.addUserToDB("Fernando", "Melendez");
 			
 			Location newLocation = new Location(2,false,1,3);
-			
-//			invMang.addInventory( newLocation, "Escoba", 50, 185, 30,
-//					100, 10.56, "limpieza",5.78);
+			//Location, name, mincap, maxcap, inStoreAvailable, stockAvailable, retailPrice,  category, cost
+			invMang.addInventory( newLocation, "XBOX", 30, 100, 30,
+					15, 300.00, "electronics",60.00);
 			
 //			System.out.println(invMang.getSingleItem(newLocation));
 //			invMang.userBuysItem(newLocation, 20);
 //			invMang.minimunCapacityReach(newLocation);
 //			invMang.needToBringItemsToFloor(newLocation);
-			ArrayList<Item> items = invMang.getAllItems();
+//			ArrayList<Item> items = invMang.getAllItems();
 			
 			
 			
