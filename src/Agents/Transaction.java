@@ -1,6 +1,6 @@
 package Agents;
 
-import java.awt.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,18 +11,33 @@ public class Transaction {
 	private double totalPrice;
 	private Map<String, Integer> items;
 	
-	public Transaction(String id,String userID, String date,  Map<String, ListItem> virtualCart){
+	
+	public Transaction(String id,String userID, String date, ArrayList<ListItem> vCart){
+		this(id,userID, date);
+		for(ListItem i: vCart){
+			items.put(i.getItem().getId(), i.getAmount());
+			totalPrice+=i.getItem().getRetailPrice();
+		}
+	}
+	
+	public Transaction(String id,String userID, String date){
+		this.setId(id);
+		this.setUserid(userID);
+		this.setDate(date);
 		totalPrice = 0;
 		items = new HashMap<>();
-		for(String key: virtualCart.keySet()){
-			items.put(key, virtualCart.get(key).getAmount());
-			totalPrice+=virtualCart.get(key).getProduct().getPrice()*virtualCart.get(key).getAmount();
-		}
-	
-		
 	}
 
 	
+	public Transaction(ArrayList<ListItem> vCart) {
+		// TODO Auto-generated constructor stub
+		this("","","");
+		for(ListItem i: vCart){
+			items.put(i.getItem().getId(), i.getAmount());
+			totalPrice+=i.getItem().getRetailPrice();
+		}
+	}
+
 	public String getId() {
 		return id;
 	}

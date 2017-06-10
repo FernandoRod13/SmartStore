@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import Inventory.Item;
+
 public class TrendingAgent {
 	
 	ArrayList<Transaction> transactions;
@@ -29,7 +31,7 @@ public class TrendingAgent {
 					//number of visits per user will be considered later
 
 				}
-				 //user for budget distribution
+				 //used for budget distribution
 				//number of visits per user will be considered later
 
 				
@@ -41,6 +43,8 @@ public class TrendingAgent {
 			totalSales+=trends.get(key);
 		}
 	}
+	
+	
 	
 	public Map<String, Double> budgetDistribution(double budget){
 		Map<String, Double> budgetDis = new HashMap<>();
@@ -58,7 +62,133 @@ public class TrendingAgent {
 		
 	}
 	
+	public void determineMinStock(){
+		//TrendsBased?
+		Map<String, TransactionItem> titems = new HashMap<>();
+		//convert
+		for(Transaction t: transactions){
+			for(String k: t.getItems().keySet()){
+				if(!titems.containsKey(k)){ //if the transaction item has not been created yet
+					titems.put(k, new TransactionItem(k));
+				}
+				titems.get(k).addSale(t.getDate(), t.getItems().get(k)); //add sale 
+			}
+		}
+		
+		//print lower and upper min stock
+		for(TransactionItem i: titems.values()){
+			System.out.println(i.getItem());
+			System.out.println("AVG "+i.getAverage());
+			System.out.println("STD Dev "+i.getStandardDeviation(i.getAverage()));
+			System.out.println("Lower: " + i.getLowerMin());
+			System.out.println("Upper: " + i.getUpperMin());
+			System.out.println("\n");
+			
+		}
+		
+		
+		
+	}
+	
+	
 	//TODO: get average sales per day for each Item, and set the minCapacity according to trending
 	
+	/**
+	 * This Item contains all the neccesary information to get the average sales per day for any iteration 
+	 * @author mario
+	 *
+	 */
+	public class TransactionItem implements Comparable<TransactionItem>{
+		private String id;
+		private Map<String, Long> salesPerDay; //<Date, Sales>
+		private String item;
+		
+		public TransactionItem(String i){
+			item = i;
+			salesPerDay = new HashMap<>();
+		}
+		
+		public void addSale(String date, int amount){
+			long a;
+			if(!salesPerDay.containsKey(date)){
+				a = amount;
+			}else{
+				a = salesPerDay.get(date)+amount;
+			}
+			salesPerDay.put(date, a);
+		}
+		
+		public double getAverage(){
+			if(salesPerDay.isEmpty()){ 
+				return 0;
+			
+			}
+			double avg = 0;
+			for(Long am: salesPerDay.values()){
+				avg+=am;
+			}
+			System.out.println();
+			
+			return avg/salesPerDay.size();
+		}
+		
+		public double getStandardDeviation(double avg){
+			if(salesPerDay.isEmpty()) return 0;
+			double dev = 0;
+			for(Long value: salesPerDay.values()){
+				dev+=Math.pow(value-avg, 2);
+			}
+			
+			return Math.sqrt(dev/salesPerDay.size());
+		}
+		
+		public int getUpperMin(){
+			double avg = getAverage();
+			return (int) (avg+getStandardDeviation(avg));
+			
+		}
+		
+		public int getLowerMin(){
+			double avg = getAverage();
+			return (int) (avg-getStandardDeviation(avg)/2) + 1; //at leat one
+		}
 
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public Map<String, Long> getSalesPerDay() {
+			return salesPerDay;
+		}
+
+		public void setSalesPerDay(Map<String, Long> salesPerDay) {
+			this.salesPerDay = salesPerDay;
+		}
+
+		public String getItem() {
+			return item;
+		}
+
+		public void setItem(String item) {
+			this.item = item;
+		}
+
+		@Override
+		public int compareTo(TransactionItem item) {
+			// TODO Auto-generated method stub
+			double avg1 = getAverage(), avg2 = item.getAverage();
+			
+			if(avg1>avg2) return 1;
+			if(avg1==avg2) return 0;
+			return -1;
+		}
+		
+		
+		
+		
+	}
 }
