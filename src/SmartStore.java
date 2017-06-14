@@ -1,6 +1,7 @@
 import Agents.Transaction;
 import Agents.User;
 import Agents.UserManager;
+import Evironment.StoreMap;
 import Inventory.InventoryManager;
 import Inventory.Location;
 
@@ -31,6 +32,7 @@ public class SmartStore {
 			System.out.println(user.getVirtualCart().size());
 			Transaction t = new Transaction("t1",user.getId(), "10-6-17", user.getVirtualCart());
 			System.out.println(t.getTotalPrice());
+			StoreMap map = new StoreMap();
 			
 //			System.out.println(invMang.getSingleItem(newLocation));
 //			invMang.userBuysItem(newLocation, 20);
