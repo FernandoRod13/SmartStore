@@ -4,6 +4,7 @@ import java.util.Date;
 import Agents.TransactionManager;
 import Agents.User;
 import Agents.UserManager;
+import Evironment.StoreMap;
 import Inventory.InventoryManager;
 import Inventory.Item;
 import Inventory.ListItem;
@@ -19,7 +20,7 @@ public class SmartStore {
 			InventoryManager invMang = InventoryManager.getInstance();
 			UserManager userManager = UserManager.getInstance();
 			TransactionManager transManager = TransactionManager.getInstance();
-			
+			StoreMap map = new StoreMap();
 			
 			invMang.DBInit();
 			userManager.DBInit();
