@@ -5,62 +5,45 @@ import java.util.HashMap;
 import java.util.Map;
 
 import Inventory.ListItem;
+import java.util.Date;
 
 public class Transaction {
-	private String userid, date, id;
+	private String userId, transactionDd;
+	private Date date;
 	private double totalPrice;
-	private Map<String, Integer> items;
+	private ArrayList<ListItem> items;
 	
 	
-	public Transaction(String id,String userID, String date, ArrayList<ListItem> vCart){
-		this(id,userID, date);
-		for(ListItem i: vCart){
-			items.put(i.getItem().getId(), i.getAmount());
-			totalPrice+=i.getItem().getRetailPrice();
-		}
-	}
-	
-	public Transaction(String id,String userID, String date){
-		this.setId(id);
-		this.setUserid(userID);
-		this.setDate(date);
-		totalPrice = 0;
-		items = new HashMap<>();
+	public Transaction(String userId, String transactionDd, Date date, double totalPrice, ArrayList<ListItem> items) {
+		super();
+		this.userId = userId;
+		this.transactionDd = transactionDd;
+		this.date = date;
+		this.totalPrice = totalPrice;
+		this.items = items;
 	}
 
-	
-	public Transaction(ArrayList<ListItem> vCart) {
-		// TODO Auto-generated constructor stub
-		this("","","");
-		for(ListItem i: vCart){
-			items.put(i.getItem().getId(), i.getAmount());
-			totalPrice+=i.getItem().getRetailPrice();
-		}
+	public String getUserId() {
+		return userId;
 	}
 
-	public String getId() {
-		return id;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
-
-	public void setId(String id) {
-		this.id = id;
+	public String getTransactionDd() {
+		return transactionDd;
 	}
 
-
-	public String getUserid() {
-		return userid;
+	public void setTransactionDd(String transactionDd) {
+		this.transactionDd = transactionDd;
 	}
 
-	public void setUserid(String userid) {
-		this.userid = userid;
-	}
-
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 
@@ -72,13 +55,15 @@ public class Transaction {
 		this.totalPrice = totalPrice;
 	}
 
-	public Map<String, Integer> getItems() {
+	public ArrayList<ListItem> getItems() {
 		return items;
 	}
 
-	public void setItems(Map<String, Integer> items) {
+	public void setItems(ArrayList<ListItem> items) {
 		this.items = items;
 	}
+	
+	
 	
 	
 
