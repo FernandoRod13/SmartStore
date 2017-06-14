@@ -121,6 +121,12 @@ public class User {
 		this.groceryList = groceryList;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", lastName=" + lastName + ", virtualCart=" + virtualCart
+				+ ", groceryList=" + groceryList + "]";
+	}
+
 	
 }	
 	

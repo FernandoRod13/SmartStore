@@ -175,7 +175,7 @@ public class UserManager {
 		}
 		catch(Exception e){
 
-			System.err.println("Error Soy un pendejo" +  e.getClass().getName() + ": " + e.getMessage() );
+			System.err.println(e.getClass().getName() + ": " + e.getMessage() );
 		}
 
 		return newUser;
