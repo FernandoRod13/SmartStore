@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Date;
 
-import Agents.Transaction;
 import Agents.TransactionManager;
 import Agents.User;
 import Agents.UserManager;
@@ -58,15 +57,7 @@ public class SmartStore {
 //			invMang.minimunCapacityReach(newLocation);
 //			invMang.needToBringItemsToFloor(newLocation);
 //			ArrayList<Item> items = invMang.getAllItems();
-			
-			
-			
-			
-			
-			
-			
-			
-			
+	
 		} catch (Exception  e) {
 			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 		}

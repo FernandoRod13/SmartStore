@@ -1,11 +1,9 @@
 package Agents;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 import Inventory.ListItem;
-import java.util.Date;
 
 public class Transaction {
 	private String userId, transactionId;
@@ -19,8 +17,12 @@ public class Transaction {
 		this.userId = userId;
 		this.transactionId = transactionId;
 		this.date = date;
-		this.totalPrice = totalPrice;
-		this.items = items;
+		this.totalPrice =0;
+		this.items = new ArrayList<>();
+		
+		for(ListItem i: items){
+			this.items.add(i);
+		}
 	}
 
 	public String getUserId() {
@@ -63,8 +65,4 @@ public class Transaction {
 		this.items = items;
 	}
 	
-	
-	
-	
-
 }

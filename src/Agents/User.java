@@ -16,6 +16,7 @@ public class User {
 	private String lastName;
 	private ArrayList<ListItem> virtualCart;
 	private ArrayList<ListItem> groceryList;
+	private double totalPriceInCart;
 	
 	
 	public User(String id, String name, String lastName) {
@@ -23,6 +24,7 @@ public class User {
 		this.id = id;
 		this.name = name;
 		this.lastName = lastName;
+		this.totalPriceInCart = 0;
 		this.virtualCart = new ArrayList<>();
 		this.groceryList = new ArrayList<>();
 	}
@@ -38,6 +40,7 @@ public class User {
 		ListItem newListItem = new ListItem(item,qty);
 		virtualCart.add(newListItem);
 		InventoryManager.getInstance().userBuysItem(item.getLocation(), qty);
+		totalPriceInCart+=item.getRetailPrice()*qty;
 
 	}
 	
@@ -52,6 +55,8 @@ public class User {
 		int indexOfItem = getIndexOfItem(item.getId());
 		virtualCart.remove(indexOfItem);
 		InventoryManager.getInstance().userReturnsItem(item.getLocation(), qty);
+		totalPriceInCart-=item.getRetailPrice()*qty;
+
 		
 
 	}
@@ -119,6 +124,10 @@ public class User {
 
 	public void setGroceryList(ArrayList<ListItem> groceryList) {
 		this.groceryList = groceryList;
+	}
+	
+	public double getCartTotal(){
+		return totalPriceInCart;
 	}
 
 	@Override
