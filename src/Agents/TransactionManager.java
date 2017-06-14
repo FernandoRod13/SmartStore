@@ -115,11 +115,11 @@ public class TransactionManager {
 					new ArrayList<Document>());
 
 			for(Document document : allTransactionsDoc){
-			User user = convertDocumentToUser(document);
+			Transaction trans = convertDocumentToTransaction(document);
 			
-			System.out.println(user);
+			System.out.println(trans);
 			System.out.println("\n");
-			allUsers.add(user);
+			allTransactions.add(trans);
 
 			}             
 		}
@@ -128,7 +128,7 @@ public class TransactionManager {
 
 			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 		}
-		return allUsers;
+		return allTransactions;
 	}
 	
 	/**
@@ -150,14 +150,37 @@ public class TransactionManager {
 
 		try{
 
-			Document items = new Document("itemId": )
+			
+			Document items = new Document();
+			ArrayList<Document> listItemsDocs = new ArrayList<>();
+			for(int index = 0; index < itemsArray.size(); index++){
+
+
+				Document listItem = new Document()
+				.append("itemId", itemsArray.get(index).getItem().getId())
+				.append("itemName", itemsArray.get(index).getItem().getName())
+				.append("qty", itemsArray.get(index).getAmount());
+
+				listItemsDocs.add(listItem);
+			}
+			
+			items.append("items", listItemsDocs);
+			
+			System.out.println("The items are:");
+			System.out.println(items);
+			
 
 			Document transaction = new Document("Date", date)
 					.append("userId", userId)
 					.append("totalPrice", totalPrice)
 					.append("items", items);
+			
+			System.out.println("The transaction is:");
+			System.out.println(transaction);
 
 			transactions.insertOne(transaction);
+		
+			
 		}
 		catch(Exception e){
 
@@ -167,14 +190,17 @@ public class TransactionManager {
 
 	
 	
-	public User convertDocumentToTransactions(Document TransactionsDoc){
+	public Transaction convertDocumentToTransaction(Document transactionsDoc){
 
-		User newUser = null;
+		Transaction newTransaction = null;
 
 		try{
 
-			String objectID = "" + user.getObjectId("_id");
-			newUser = new User(objectID, user.getString("name"), user.getString("lastName"));
+			String transactionId = "" + transactionsDoc.getObjectId("_id");
+			String userId = transactionsDoc.getString("userId");
+			
+			newTransaction = new Transaction(userId, transactionId, transactionsDoc.getDate("date"),
+					transactionsDoc.getDouble("totalPrice"), transactionsDoc.get("items", ArrayList.class));
 
 		}
 		catch(Exception e){
@@ -182,7 +208,7 @@ public class TransactionManager {
 			System.err.println("Error Soy un pendejo" +  e.getClass().getName() + ": " + e.getMessage() );
 		}
 
-		return newUser;
+		return newTransaction;
 	}
 	
 	

@@ -1,7 +1,13 @@
+import java.util.ArrayList;
+import java.util.Date;
+
 import Agents.Transaction;
+import Agents.TransactionManager;
 import Agents.User;
 import Agents.UserManager;
 import Inventory.InventoryManager;
+import Inventory.Item;
+import Inventory.ListItem;
 import Inventory.Location;
 
 public class SmartStore {
@@ -13,24 +19,39 @@ public class SmartStore {
 		try {
 			InventoryManager invMang = InventoryManager.getInstance();
 			UserManager userManager = UserManager.getInstance();
+			TransactionManager transManager = TransactionManager.getInstance();
+			
 			
 			invMang.DBInit();
 			userManager.DBInit();
+			transManager.DBInit();
+			
 			User user = userManager.getAllUsers().get(0);
 			System.out.println(user.getName());
-//			userManager.addUserToDB("Cristian", "Melendez");
-//			
-//			userManager.addUserToDB("Martito", "Melendez");			// Por que ustedes son mis hijos jaja
-//			userManager.addUserToDB("Fernando", "Melendez");
+
 			
 			Location newLocation = new Location(2,false,1,3);
-			//Location, name, mincap, maxcap, inStoreAvailable, stockAvailable, retailPrice,  category, cost
-			invMang.addInventory( newLocation, "XBOX", 30, 100, 30,
-					15, 300.00, "electronics",60.00);
-			user.userPickItem(invMang.getSingleItem(newLocation), 1);
-			System.out.println(user.getVirtualCart().size());
-			Transaction t = new Transaction("t1",user.getId(), "10-6-17", user.getVirtualCart());
-			System.out.println(t.getTotalPrice());
+			Item item1 = new Item("2345434f","XBOX",60.00,"electronics", 30, 100, 30,
+					15, 300.00, newLocation);
+			
+			Item item2 = new Item("234656f","Nintendo",56.00,"electronics", 30, 100, 30,
+					15, 356.00, newLocation);
+			
+			ListItem listItem1 = new ListItem(item1,3);
+			ListItem listItem2 = new ListItem(item2,4);
+			
+			ArrayList<ListItem> items = new ArrayList<>();
+			
+			items.add(listItem1);
+			items.add(listItem2);
+			
+			
+			transManager.addTransaction(items, new Date(), "801124795", (300.00 * 3) + (356 * 4));
+			
+			
+		
+			
+			
 			
 //			System.out.println(invMang.getSingleItem(newLocation));
 //			invMang.userBuysItem(newLocation, 20);

@@ -8,16 +8,16 @@ import Inventory.ListItem;
 import java.util.Date;
 
 public class Transaction {
-	private String userId, transactionDd;
+	private String userId, transactionId;
 	private Date date;
 	private double totalPrice;
 	private ArrayList<ListItem> items;
 	
 	
-	public Transaction(String userId, String transactionDd, Date date, double totalPrice, ArrayList<ListItem> items) {
+	public Transaction(String userId, String transactionId, Date date, double totalPrice, ArrayList<ListItem> items) {
 		super();
 		this.userId = userId;
-		this.transactionDd = transactionDd;
+		this.transactionId = transactionId;
 		this.date = date;
 		this.totalPrice = totalPrice;
 		this.items = items;
@@ -32,11 +32,11 @@ public class Transaction {
 	}
 
 	public String getTransactionDd() {
-		return transactionDd;
+		return transactionId;
 	}
 
 	public void setTransactionDd(String transactionDd) {
-		this.transactionDd = transactionDd;
+		this.transactionId = transactionDd;
 	}
 
 	public Date getDate() {
