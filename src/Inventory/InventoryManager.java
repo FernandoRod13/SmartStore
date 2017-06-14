@@ -2,43 +2,19 @@
 package Inventory;
 
 
-import java.net.UnknownHostException;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Updates.combine;
+import static com.mongodb.client.model.Updates.set;
 
-import com.mongodb.MongoClient;
-
-import com.mongodb.MongoClientURI;
-
-import com.mongodb.ServerAddress;
-
-import com.mongodb.client.MongoDatabase;
-
-import com.mongodb.client.MongoCollection;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bson.Document;
 
-import org.bson.conversions.Bson;
-
-import org.bson.types.ObjectId;
-
-import java.util.Arrays;
-
-import com.mongodb.Block;
-
-import com.mongodb.client.MongoCursor;
-
-import static com.mongodb.client.model.Filters.*;
-
-import com.mongodb.client.result.DeleteResult;
-
-import static com.mongodb.client.model.Updates.*;
-
-import com.mongodb.client.result.UpdateResult;
-
-import java.util.ArrayList;
-
-import java.util.List;
-
-import java.util.Arrays;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
 
 
@@ -182,7 +158,8 @@ public class InventoryManager {
 		}
 		return allItems;
 	}
-
+	
+	
 
 	/**
 
@@ -211,9 +188,9 @@ public class InventoryManager {
 
 			item = items.get(0);
 
-			System.out.println("Search Successfully");
+//			System.out.println("Search Successfully");
 
-			System.out.println(IDToString(item));
+//			System.out.println(IDToString(item));
 
 
 		}
@@ -226,6 +203,28 @@ public class InventoryManager {
 
 		return convertDocumentToItem(item);
 
+	}
+	
+	public void setAvailableItem(Location itemLocation, int quantity){
+		Document location = convertLocationToDocument(itemLocation);
+
+
+		try{
+
+			Item item = getInstance().getSingleItem(itemLocation);
+
+			inventory.findOneAndUpdate(eq("location", location),
+					combine(set("inStoreAvailable",quantity)));
+			
+//			System.out.println("After the user buys the item the file was updated Successfully");
+
+		}
+
+		catch(Exception e){
+
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
+		}
+		
 	}
 
 
@@ -463,6 +462,7 @@ public class InventoryManager {
 			int currentInStoreValue = item.getInStsoreAvailable();
 
 			int newAmount = currentInStoreValue - amount;
+			if(newAmount<0) newAmount = 30; //just for testing
 
 
 			inventory.findOneAndUpdate(eq("location", location),
@@ -470,7 +470,7 @@ public class InventoryManager {
 					combine(set("inStoreAvailable",newAmount )));
 
 
-			System.out.println("After the user buys the item the file was updated Successfully");
+//			System.out.println("After the user buys the item the file was updated Successfully");
 
 		}
 

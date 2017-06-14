@@ -1,45 +1,50 @@
 package Agents;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import Inventory.ListItem;
+
 public class TrendingAgent {
 
-//	ArrayList<Transaction> transactions;
-	ArrayList<ArrayList<Transaction>> iterations;//for testing purposes only, later will be replaced with db queries
+	//	ArrayList<Transaction> transactions;
+//	ArrayList<ArrayList<Transaction>> iterations;//for testing purposes only, later will be replaced with db queries
+	ArrayList<Transaction> transactions;
 	Map<String, Integer> trends;
 	long totalSales;
 
 	public TrendingAgent(ArrayList<Transaction> transactions){
-		iterations = new ArrayList<>();
-		iterations.add(transactions);
+//		iterations = new ArrayList<>();
+//		iterations.add(transactions);
+		this.transactions = transactions;
 		trends = new HashMap<>();
 	}
+	
 
 	public void determineTrends(){
 		totalSales = 0;
-		for(ArrayList<Transaction> list: iterations)
-		for(Transaction trans: list){ //for every transaction
-			for(String key: trans.getItems().keySet()){ //for every item in the transaction
-				//add transaction information
-				if(!trends.containsKey(key)){
-					trends.put(key, trans.getItems().get(key));
-					//number of visits per user will be considered later
-				}
-				else{
-					trends.put(key, trans.getItems().get(key)+trends.get(key));
+			for(Transaction trans: transactions){ //for every transaction
+				for(ListItem item: trans.getItems()){ //for every item in the transaction
+					//add transaction information
+					if(!trends.containsKey(item.getItem().getId())){
+						trends.put(item.getItem().getId(), item.getAmount());
+						//number of visits per user will be considered later
+					}
+					else{
+						trends.put(item.getItem().getId(), item.getAmount()+trends.get(item.getItem().getId()));
+						//number of visits per user will be considered later
+
+					}
+					//used for budget distribution
 					//number of visits per user will be considered later
 
+
 				}
-				 //used for budget distribution
-				//number of visits per user will be considered later
 
 
 			}
-
-
-		}
 		for(String key: trends.keySet()){
 			totalSales+=trends.get(key);
 		}
@@ -62,24 +67,21 @@ public class TrendingAgent {
 
 	}
 
-  public void addTransaction(Transaction transaction){
-     getCurrentIteration().add(transaction);
-  }
-
 	public void determineMinStock(){
 		//TrendsBased?
 		Map<String, TransactionItem> titems = new HashMap<>();
 		//convert
-		for(ArrayList<Transaction> list: iterations)
-		for(Transaction t: list){
-			for(String k: t.getItems().keySet()){
-				if(!titems.containsKey(k)){ //if the transaction item has not been created yet
-					titems.put(k, new TransactionItem(k));
+		String key;
+			for(Transaction t: transactions){
+				for(ListItem item: t.getItems()){
+					key = item.getItem().getId();
+					if(!titems.containsKey(key)){ //if the transaction item has not been created yet
+						titems.put(key, new TransactionItem(key));
+					}
+					titems.get(key).addSale(t.getDate(), item.getAmount()); //add sale
 				}
-				titems.get(k).addSale(t.getDate(), t.getItems().get(k)); //add sale
 			}
-		}
-
+		
 		//print lower and upper min stock
 		for(TransactionItem i: titems.values()){
 			System.out.println(i.getItem());
@@ -97,18 +99,6 @@ public class TrendingAgent {
 
 
 
-	}
-
-	public void changeIteration(){
-		if(iterations.size()==6){
-			iterations.remove(0);
-		}
-		iterations.add(new ArrayList<>());
-	}
-
-	public ArrayList<Transaction> getCurrentIteration(){
-		if(iterations.isEmpty()) return null; //throw exception if necessary later
-		return iterations.get(iterations.size()-1);
 	}
 
 
@@ -129,14 +119,14 @@ public class TrendingAgent {
 			salesPerDay = new HashMap<>();
 		}
 
-		public void addSale(String date, int amount){
+		public void addSale(Date date, int amount){
 			long a;
 			if(!salesPerDay.containsKey(date)){
 				a = amount;
 			}else{
-				a = salesPerDay.get(date)+amount;
+				a = salesPerDay.get(date.toString())+amount;
 			}
-			salesPerDay.put(date, a);
+			salesPerDay.put(date.toString(), a);
 		}
 
 		public double getAverage(){
@@ -148,9 +138,8 @@ public class TrendingAgent {
 			for(Long am: salesPerDay.values()){
 				avg+=am;
 			}
-			System.out.println();
 
-			return avg/salesPerDay.size();
+			return avg/(salesPerDay.size());
 		}
 
 		public double getStandardDeviation(double avg){

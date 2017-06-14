@@ -13,7 +13,6 @@ public class Item {
 	private Location location;
 	
 	
-	
 	public Item(String id, String name, double retailPrice, String category, int mincap, int maxcap,
 			int inStoreAvailable, int stockAvailable, double cost, Location location) {
 		super();
@@ -28,8 +27,14 @@ public class Item {
 		this.cost = cost;
 		this.location = location;
 	}
+	
+	
+	public Item(String id, String name){
+		this.id = id;
+		this.name = name;
+	}
 
-
+	
 
 	public String getId() {
 		return id;
