@@ -48,7 +48,7 @@ public class SmartStore {
 			
 			
 			transManager.addTransaction(items, new Date(), "801124795", (300.00 * 3) + (356 * 4));
-			StoreMap map = new StoreMap();
+			StoreMap graph = new StoreMap();
 			
 //			System.out.println(invMang.getSingleItem(newLocation));
 //			invMang.userBuysItem(newLocation, 20);

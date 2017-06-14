@@ -14,6 +14,7 @@ public class Node {
 	
 	public Node(int index) {
 		super();
+		this.locations = new ArrayList<>();
 		this.neighbors = new ArrayList<>();
 		this.isEntry = false;
 		this.isExit = false;
@@ -30,6 +31,10 @@ public class Node {
 
 	public ArrayList<Location> getLocations() {
 		return locations;
+	}
+	
+	public void addLocation(Location l) {
+		this.locations.add(l);
 	}
 
 	public boolean isEntry() {

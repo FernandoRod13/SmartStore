@@ -5,6 +5,7 @@ public class Location {
 	private boolean isLeft;
 	private int row;
 	private int container;
+	private int graphNodeIndex;
 	
 	
 	public Location(int container, boolean isLeft, int column, int row) {
@@ -13,16 +14,31 @@ public class Location {
 		this.isLeft = isLeft;
 		this.row = row;
 		this.container = container;
+		this.graphNodeIndex = -1;
+		
+	}
+	
+	public Location(int container, boolean isLeft, int column, int row, int nodeIndex) {
+		super();
+		this.column = column;
+		this.isLeft = isLeft;
+		this.row = row;
+		this.container = container;
+		this.graphNodeIndex = nodeIndex;
 		
 	}
 	/**
 	 * This constructor is only used when initializing the product to populate the store data structure with inventory
 	 * @param splitFileLine a file line spliced into an array of components
 	 */
-//	public Location(String[] splitFileLine){
-//		this(Integer.parseInt(splitFileLine[0]),Boolean.parseBoolean(splitFileLine[1]),Integer.parseInt(splitFileLine[2]),
-//				Integer.parseInt(splitFileLine[3]),Boolean.parseBoolean(splitFileLine[4]));
-//	}
+	public Location(String[] splitFileLine, int level){
+		this(Integer.parseInt(splitFileLine[0]),Boolean.parseBoolean(splitFileLine[1]),Integer.parseInt(splitFileLine[2]),
+				level, Integer.parseInt(splitFileLine[4]));
+	}
+
+	public int getGraphNodeIndex() {
+		return graphNodeIndex;
+	}
 
 	public int getColumn() {
 		return column;

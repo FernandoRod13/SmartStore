@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import Inventory.Location;
+
 public class StoreMap {
 	private Node entry;
 	private Node exit;
@@ -40,6 +42,19 @@ public class StoreMap {
 		        }
 		    }
 		    
+		}
+		File storelayout = new File("src/StoreLayout.txt");
+		try(BufferedReader br = new BufferedReader(new FileReader(storelayout))) {
+		    for(String line; (line = br.readLine()) != null; ) {
+		        if(!line.equals("Container|isLeft|Columns|Levels|GraphNode")) {
+		        	String[] layoutFragments = line.split("\\|", -1);
+		        	for(int j = 0; j < 3; j++) {
+		        		Location l = new Location(layoutFragments,j);
+		        		Node node = graph.get(l.getGraphNodeIndex());
+		        		node.addLocation(l);
+		        	}
+		        }
+		    }
 		}
 		System.out.println("finished graph");
 	}
