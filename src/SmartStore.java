@@ -20,7 +20,6 @@ public class SmartStore {
 			InventoryManager invMang = InventoryManager.getInstance();
 			UserManager userManager = UserManager.getInstance();
 			TransactionManager transManager = TransactionManager.getInstance();
-			StoreMap map = new StoreMap();
 			
 			invMang.DBInit();
 			userManager.DBInit();
@@ -56,6 +55,7 @@ public class SmartStore {
 			
 //			transManager.addTransaction(items, new Date(), "801124795", (300.00 * 3) + (356 * 4));
 			StoreMap graph = new StoreMap();
+
 			
 //			System.out.println(invMang.getSingleItem(newLocation));
 //			invMang.userBuysItem(newLocation, 20);
