@@ -17,12 +17,12 @@ public class AVGTesting {
 		InventoryManager.getInstance().DBInit();
 		UserManager.getInstance().DBInit();
 		TransactionManager.getInstance().DBInit();
-//		addTransactions(3,5,20);
+//		addTransactions(3,5,20, Calendar.JUNE);
 		runAgent();
 
 	}
 
-	public static void addTransactions(int months, int transactions, int topProducts){
+	public static void addTransactions(int months, int transactions, int topProducts, int initialMonth){
 		ArrayList<User> users = UserManager.getInstance().getAllUsers();
 		ArrayList<Item> items = InventoryManager.getInstance().getAllItems();
 		TransactionManager tm = TransactionManager.getInstance();
@@ -30,12 +30,12 @@ public class AVGTesting {
 		User u = users.get(0);
 		Random r = new Random();
 		ArrayList<ListItem> cartItems = new ArrayList<>();
-		GregorianCalendar cal = new GregorianCalendar(2017, Calendar.JANUARY, 1);
-		for(int iter = 0; iter<2; iter++){
+		GregorianCalendar cal = new GregorianCalendar(2017,initialMonth, 1);
+		for(int iter = 0; iter<months; iter++){
 			Date d = cal.getTime();
-			for(int index = 0; index<3; index++){
+			for(int index = 0; index<transactions; index++){
 				for(Item i: items){
-					u.userPickItem(i, r.nextInt(10));
+					u.userPickItem(i, r.nextInt(topProducts));
 				}
 				cartItems = new ArrayList<>();
 				cartItems.addAll(u.getVirtualCart());
@@ -51,6 +51,7 @@ public class AVGTesting {
 
 		agent.determineMinStock();
 		agent.determineTrends();
+		agent.setCapacities();
 
 	}
 

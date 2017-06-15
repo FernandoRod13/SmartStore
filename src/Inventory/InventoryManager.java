@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.bson.Document;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
@@ -56,6 +58,10 @@ public class InventoryManager {
 			db = client.getDatabase(uri.getDatabase());
 
 			inventory = db.getCollection("inventory"); 
+//			inventory.drop();
+//			db.createCollection("inventory");
+//			inventory = db.getCollection("inventory"); 
+
 
 
 
@@ -211,7 +217,7 @@ public class InventoryManager {
 
 		try{
 
-			Item item = getInstance().getSingleItem(itemLocation);
+//			Item item = getInstance().getSingleItem(itemLocation);
 
 			inventory.findOneAndUpdate(eq("location", location),
 					combine(set("inStoreAvailable",quantity)));
@@ -225,6 +231,32 @@ public class InventoryManager {
 			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 		}
 		
+	}
+	
+	public void setMinCapacity(Item item, int capacity){
+		Document loc = this.convertLocationToDocument(item.getLocation());
+
+		try{
+			inventory.updateMany(eq("location", loc),
+
+					combine(set("mincap",capacity )));
+		}
+		catch(Exception e){
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage());
+		}
+	}
+	
+	public void setMaxCapacity(Item item, int capacity){
+		Document loc = this.convertLocationToDocument(item.getLocation());		
+		try{
+			inventory.updateMany(eq("location", loc),
+
+					combine(set("maxcap",capacity )));
+			
+		}
+		catch(Exception e){
+			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage());
+		}
 	}
 
 
