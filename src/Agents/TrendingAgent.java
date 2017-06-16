@@ -1,35 +1,39 @@
 package Agents;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import Inventory.InventoryManager;
+import Inventory.Item;
 import Inventory.ListItem;
 
 public class TrendingAgent {
 
-	//	ArrayList<Transaction> transactions;
-//	ArrayList<ArrayList<Transaction>> iterations;//for testing purposes only, later will be replaced with db queries
 	ArrayList<Transaction> transactions;
-	Map<String, Integer> trends;
 	long totalSales;
+	ArrayList<TrendItem> trendItems;
+	Map<String, TransactionItem> titems;
 
 	public TrendingAgent(ArrayList<Transaction> transactions){
-//		iterations = new ArrayList<>();
-//		iterations.add(transactions);
 		this.transactions = transactions;
-		trends = new HashMap<>();
+		trendItems = new ArrayList<>();
+		titems = new HashMap<>();
 	}
 	
 
 	public void determineTrends(){
+		Map<String, Integer> trends = new HashMap<>();
+		Map<String, Item> items = new HashMap<>();
 		totalSales = 0;
 			for(Transaction trans: transactions){ //for every transaction
 				for(ListItem item: trans.getItems()){ //for every item in the transaction
 					//add transaction information
 					if(!trends.containsKey(item.getItem().getId())){
 						trends.put(item.getItem().getId(), item.getAmount());
+						items.put(item.getItem().getId(), item.getItem());
 						//number of visits per user will be considered later
 					}
 					else{
@@ -47,29 +51,16 @@ public class TrendingAgent {
 			}
 		for(String key: trends.keySet()){
 			totalSales+=trends.get(key);
+			trendItems.add(new TrendItem(items.get(key), trends.get(key)));
+//			titems.put(key, trends.get(key));
 		}
+		Collections.sort(trendItems);
 	}
-
-
-	public Map<String, Double> budgetDistribution(double budget){
-		Map<String, Double> budgetDis = new HashMap<>();
-
-		for(String key: trends.keySet()){
-			//convert to dollars
-			double value =(double) trends.get(key)/(double) totalSales*budget;
-			double toDollars = value*100;
-			if(toDollars-(int)toDollars>=.5) toDollars++;
-
-			//add
-			budgetDis.put(key, (int) (toDollars)/100d);
-		}
-		return budgetDis;
-
-	}
+	
 
 	public void determineMinStock(){
 		//TrendsBased?
-		Map<String, TransactionItem> titems = new HashMap<>();
+		
 		//convert
 		String key;
 			for(Transaction t: transactions){
@@ -83,10 +74,12 @@ public class TrendingAgent {
 			}
 		
 		//print lower and upper min stock
+			double avg;
 		for(TransactionItem i: titems.values()){
+			avg = i.getAverage();
 			System.out.println(i.getItem());
-			System.out.println("AVG "+i.getAverage());
-			System.out.println("STD Dev "+i.getStandardDeviation(i.getAverage()));
+			System.out.println("AVG "+avg);
+			System.out.println("STD Dev "+i.getStandardDeviation(avg));
 			System.out.println("Lower: " + i.getLowerMin());
 			System.out.println("Upper: " + i.getUpperMin());
 			System.out.println("\n");
@@ -100,16 +93,57 @@ public class TrendingAgent {
 
 
 	}
+	
+	public void setCapacities(){
+		int cap = 0;
+		TransactionItem item;
+		for(int index=0; index<trendItems.size(); index++){
+			item = titems.get(trendItems.get(index).getItem().getId());
+			if(index<trendItems.size()*.3){
+				cap =item.getUpperMin()*30;
+			}
+			else cap = item.getLowerMin()*30;
+			
+			InventoryManager.getInstance().setMinCapacity(trendItems.get(index).getItem(), cap);
+			InventoryManager.getInstance().setMaxCapacity(trendItems.get(index).getItem(), cap*2);
+		}
+	}
 
 
-	//TODO: get average sales per day for each Item, and set the minCapacity according to trending
+	private class TrendItem implements Comparable<TrendItem>{
+		private long sales;
+		private Item item;
+		TrendItem(Item i, long s){
+			item =i;
+			sales = s;
+			
+		}
+		
+		public Item getItem(){
+			return item;
+		}
+
+		@Override
+		public int compareTo(TrendItem item) {
+			// TODO Auto-generated method stub
+			return (int) (item.sales - sales);
+		}
+		
+	}
+	
+	public void printTrending(){
+		for(TrendItem item: trendItems){
+			System.out.println(item.getItem().getId()+" "+item.sales);
+		}
+		System.out.println();
+	}
 
 	/**
-	 * This Item contains all the neccesary information to get the average sales per day for any iteration
+	 * This Item contains all the necessary information to get the average sales per day for any iteration
 	 * @author mario
 	 *
 	 */
-	public class TransactionItem implements Comparable<TransactionItem>{
+	private class TransactionItem implements Comparable<TransactionItem>{
 		private String id;
 		private Map<String, Long> salesPerDay; //<Date, Sales>
 		private String item;
