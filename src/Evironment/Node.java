@@ -71,6 +71,10 @@ public class Node {
 		this.parent = parent;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		return this.getIndex() == ((Node) o).getIndex();
+	}
 	
 	
 }

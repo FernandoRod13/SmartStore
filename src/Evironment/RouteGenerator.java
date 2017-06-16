@@ -43,14 +43,16 @@ public class RouteGenerator {
 		ArrayList<Step> steps = new ArrayList<>();
 		ArrayList<Location> locations = extractLocationList(groceryList);
 		Node current = graph.getEntry();
-		for(Location loc: locations) {
-			Step step = new Step(current, loc.getGraphNodeIndex(), traceRoute(current,loc.getGraphNodeIndex()), 
-					InventoryManager.getInstance().getSingleItem(loc));
+		for(int i = 0; i < groceryList.size();i++) {
+			Location loc = locations.get(i);
+			ArrayList<Node> trace = traceRoute(current,loc.getGraphNodeIndex());
+			Step step = new Step(current, loc.getGraphNodeIndex(), trace, 
+					groceryList.get(i).getItem().getName());
 			steps.add(step);
 			ArrayList<Node> nodeList = step.getTrace();
 			current = nodeList.get(nodeList.size()-1);			
 		}
-		steps.add(new Step(current,this.graph.getExit().getIndex(), traceRoute(current,this.graph.getExit().getIndex()),null));
+		steps.add(new Step(current,this.graph.getExit().getIndex(), traceRoute(current,this.graph.getExit().getIndex()),"End"));
 		return steps;
 	}
 	
@@ -58,12 +60,15 @@ public class RouteGenerator {
 		ArrayList<Node> trace = new ArrayList<>();
 		HashMap<Integer, Integer> visited = new HashMap<>();
 		Queue<Node> queue = new LinkedList<>();
+		int[] explored = new int[45];
+		
 		queue.add(current);
 		current.setParent(-2);
 		while(!queue.isEmpty()) {
 			Node popped = queue.poll();
+			explored[popped.getIndex()] = 1;
 			for (Node node : popped.getNeighbors()) {
-				if(!queue.contains(node) || !visited.containsKey(node.getIndex())){
+				if(explored[node.getIndex()] == 0){
 					node.setParent(popped.getIndex());
 					queue.add(node);
 				}
@@ -80,9 +85,11 @@ public class RouteGenerator {
 				break;
 			}
 		}
+		System.out.println(visited);
 		Stack<Integer> reverseTrace = new Stack<>();
 		Integer trackingIndex = nodeIndex;
-		while(visited.get(trackingIndex) != visited.get(current.getIndex())) {
+		reverseTrace.push(trackingIndex);
+		while(reverseTrace.peek() != current.getIndex()) {
 			reverseTrace.push(trackingIndex);
 			trackingIndex = visited.get(trackingIndex);
 		}

@@ -1,9 +1,10 @@
 import java.util.ArrayList;
-import java.util.Date;
 
 import Agents.TransactionManager;
 import Agents.User;
 import Agents.UserManager;
+import Evironment.RouteGenerator;
+import Evironment.Step;
 import Evironment.StoreMap;
 import Inventory.InventoryManager;
 import Inventory.Item;
@@ -52,9 +53,8 @@ public class SmartStore {
 			items.add(listItem1);
 			items.add(listItem2);
 			
-			
+			testSearch();
 //			transManager.addTransaction(items, new Date(), "801124795", (300.00 * 3) + (356 * 4));
-			StoreMap graph = new StoreMap();
 
 			
 //			System.out.println(invMang.getSingleItem(newLocation));
@@ -64,10 +64,21 @@ public class SmartStore {
 //			ArrayList<Item> items = invMang.getAllItems();
 	
 		} catch (Exception  e) {
+			System.out.println(e);
 			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 		}
 
 		
+	}
+	
+	public static void testSearch() {
+		ListItem item1 = new ListItem(new Item("lkshdaoisj","Apples",0.99,"Fruit",2,10,10,10,0.99,new Location(2,true,2,2,21)),3);
+		ArrayList<ListItem> list = new ArrayList<>();
+		list.add(item1);
+		ArrayList<Step> steps = RouteGenerator.getInstance().getStoreDirections(list);
+		for(Step s: steps) {
+			System.out.println(s.toString());
+		}
 	}
 	
 
