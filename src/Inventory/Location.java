@@ -77,7 +77,7 @@ public class Location {
 	@Override
 	public String toString() {
 		return "Location [container = " + container + ", isLeft= " + isLeft + ", column= " + column +
-				", row=" + row + "]";
+				", row=" + row +", node = "+graphNodeIndex+ "]";
 	}
 	
 }

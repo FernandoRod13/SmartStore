@@ -544,7 +544,9 @@ public class InventoryManager {
 
 				.append("column", location.getColumn())
 
-				.append("row", location.getRow());
+				.append("row", location.getRow())
+				
+				.append("nodeIndex", location.getGraphNodeIndex());
 
 		return newLocation;
 
@@ -566,8 +568,9 @@ public class InventoryManager {
 		boolean isLeft = locationDoc.getBoolean("isLeft");
 		int column = locationDoc.getInteger("column");
 		int row = locationDoc.getInteger("row");
-		int node = locationDoc.getInteger("nodeIndex");
-		Location location = new Location(container, isLeft, column, row, node);
+		int nodeIndex = locationDoc.getInteger("nodeIndex");
+		
+		Location location = new Location(container, isLeft, column, row,nodeIndex);
 	
 		newItem = new Item(objectID, item.getString("name"), item.getDouble("retailPrice"),
 				item.getString("category"), item.getInteger("mincap"),item.getInteger("maxcap"),

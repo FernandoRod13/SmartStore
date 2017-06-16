@@ -5,7 +5,6 @@ import Agents.User;
 import Agents.UserManager;
 import Evironment.RouteGenerator;
 import Evironment.Step;
-import Evironment.StoreMap;
 import Inventory.InventoryManager;
 import Inventory.Item;
 import Inventory.ListItem;
@@ -37,13 +36,6 @@ public class SmartStore {
 			
 			Item item2 = new Item("234656f","Nintendo",56.00,"electronics", 30, 100, 30,
 					15, 356.00, newLocation);
-//			InventoryManager.getInstance().addInventory(newLocation, "apples", 10, 30, 30, 30, .60, "fruit", .20);
-//			newLocation = new Location(2,false,1,2);
-//			InventoryManager.getInstance().addInventory(newLocation, "oranges", 10, 30, 30, 30, .30, "fruit", .15);
-//			newLocation = new Location(2,false,1,1);
-//			InventoryManager.getInstance().addInventory(newLocation, "bananas", 10, 30, 30, 30, .50, "fruit", .25);
-//			newLocation = new Location(1,false,1,1);
-//			InventoryManager.getInstance().addInventory(newLocation, "lemons", 10, 30, 30, 30, .25, "fruit", .12);
 
 			ListItem listItem1 = new ListItem(item1,3);
 			ListItem listItem2 = new ListItem(item2,4);
@@ -52,23 +44,24 @@ public class SmartStore {
 			
 			items.add(listItem1);
 			items.add(listItem2);
-			ArrayList<Item> testList = InventoryManager.getInstance().getAllItems();
-			ArrayList<ListItem> list = new ArrayList<>();
-			for(Item i: testList) {
-				list.add(new ListItem(i, 2));
-			}
-			testSearch(list);
-//			transManager.addTransaction(items, new Date(), "801124795", (300.00 * 3) + (356 * 4));
-
+			User user1 = userManager.getAllUsers().get(0);
+			System.out.println(user.getName());
 			
-//			System.out.println(invMang.getSingleItem(newLocation));
-//			invMang.userBuysItem(newLocation, 20);
-//			invMang.minimunCapacityReach(newLocation);
-//			invMang.needToBringItemsToFloor(newLocation);
-//			ArrayList<Item> items = invMang.getAllItems();
+			ArrayList<Item> items1 = invMang.getAllItems();
+			
+			ArrayList<ListItem> groceryList = new ArrayList<>();
+			
+			for (int i = 0; i < items1.size(); i++) {
+				groceryList.add(new ListItem(items1.get(i),3));
+				
+			}
+		
+			user.setGroceryList(groceryList);
+			testSearch(user.getGroceryList());
+
 	
 		} catch (Exception  e) {
-			System.out.println(e);
+			e.printStackTrace();
 			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
 		}
 
@@ -82,5 +75,4 @@ public class SmartStore {
 		}
 	}
 	
-
 }

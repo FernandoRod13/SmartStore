@@ -57,7 +57,7 @@ public class StoreMap {
 		        }
 		    }
 		}
-		System.out.println("finished graph");
+		//System.out.println("finished graph");
 	}
 
 	public Node getEntry() {

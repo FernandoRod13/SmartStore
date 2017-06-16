@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
-import Inventory.InventoryManager;
 import Inventory.ListItem;
 import Inventory.Location;
+import Inventory.LocationComparator;
 
 public class RouteGenerator {
 	private static RouteGenerator instance;
@@ -36,6 +36,7 @@ public class RouteGenerator {
 		for(ListItem item: groceryList) {
 			locations.add(item.getItem().getLocation());
 		}
+		locations.sort(new LocationComparator());
 		return locations;
 	}
 	
@@ -48,6 +49,7 @@ public class RouteGenerator {
 			ArrayList<Node> trace = traceRoute(current,loc.getGraphNodeIndex());
 			Step step = new Step(current, loc.getGraphNodeIndex(), trace, 
 					groceryList.get(i).getItem().getName());
+			//System.out.println(i+1+") "+step.toString());
 			steps.add(step);
 			ArrayList<Node> nodeList = step.getTrace();
 			current = nodeList.get(nodeList.size()-1);			
@@ -89,17 +91,20 @@ public class RouteGenerator {
 		Stack<Integer> reverseTrace = new Stack<>();
 		Integer trackingIndex = nodeIndex;
 		reverseTrace.push(trackingIndex);
+		//System.out.println(reverseTrace);
 		while(reverseTrace.peek() != current.getIndex()) {
-			//reverseTrace.push(trackingIndex);
 			trackingIndex = visited.get(trackingIndex);
+			//System.out.println(trackingIndex);
 			reverseTrace.push(trackingIndex);
 		}
+		//System.out.println(reverseTrace);
 		trace.add(current);
 		reverseTrace.pop();
 		while(!reverseTrace.isEmpty()) {
 			Integer index = reverseTrace.pop();
 			trace.add(graph.getGraph().get(index));
 		}
+		
 		return trace;
 	}
 	

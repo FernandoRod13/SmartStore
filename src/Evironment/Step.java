@@ -19,7 +19,7 @@ public class Step {
 	}
 	
 	public String toString() {
-		String res =  "\nCurrent Node index: "+ this.currentNode.getIndex()+"\n Objective Node index: "+this.objective
+		String res =  "\nCurrent Node index: "+ this.currentNode.getIndex()+"\nObjective Node index: "+this.objective
 				+ "\nGrocery Item at Objective: " + this.itemName + "\nPath: ";
 		for(Node n: this.trace) {
 			res+= n.getIndex() + " -> "; 
