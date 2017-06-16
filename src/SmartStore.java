@@ -36,13 +36,13 @@ public class SmartStore {
 			
 			Item item2 = new Item("234656f","Nintendo",56.00,"electronics", 30, 100, 30,
 					15, 356.00, newLocation);
-//			InventoryManager.getInstance().addInventory(newLocation, "apples", 10, 30, 30, 30, .60, "fruit", .20);
-//			newLocation = new Location(2,false,1,2);
-//			InventoryManager.getInstance().addInventory(newLocation, "oranges", 10, 30, 30, 30, .30, "fruit", .15);
-//			newLocation = new Location(2,false,1,1);
-//			InventoryManager.getInstance().addInventory(newLocation, "bananas", 10, 30, 30, 30, .50, "fruit", .25);
-//			newLocation = new Location(1,false,1,1);
-//			InventoryManager.getInstance().addInventory(newLocation, "lemons", 10, 30, 30, 30, .25, "fruit", .12);
+			InventoryManager.getInstance().addInventory(newLocation, "apples", 10, 30, 30, 30, .60, "fruit", .20);
+			newLocation = new Location(2,false,1,2);
+			InventoryManager.getInstance().addInventory(newLocation, "oranges", 10, 30, 30, 30, .30, "fruit", .15);
+			newLocation = new Location(2,false,1,1);
+			InventoryManager.getInstance().addInventory(newLocation, "bananas", 10, 30, 30, 30, .50, "fruit", .25);
+			newLocation = new Location(1,false,1,1);
+			InventoryManager.getInstance().addInventory(newLocation, "lemons", 10, 30, 30, 30, .25, "fruit", .12);
 
 			ListItem listItem1 = new ListItem(item1,3);
 			ListItem listItem2 = new ListItem(item2,4);

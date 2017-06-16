@@ -165,6 +165,14 @@ public class InventoryManager {
 		return allItems;
 	}
 	
+	public void notifySensor(Item i){
+		if(i.getInStsoreAvailable()<=i.getMincap()){ 
+			System.out.println("Refilled");
+			this.setAvailableItem(i.getLocation(), i.getMaxcap());
+		}
+		
+	}
+	
 	
 
 	/**
@@ -245,6 +253,7 @@ public class InventoryManager {
 			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage());
 		}
 	}
+	
 	
 	public void setMaxCapacity(Item item, int capacity){
 		Document loc = this.convertLocationToDocument(item.getLocation());		
@@ -426,47 +435,6 @@ public class InventoryManager {
 
 	 */
 
-	public boolean minimunCapacityReach(Location itemLocation){
-
-
-		try{
-
-			Item item = getInstance().getSingleItem(itemLocation);
-
-			int minimumRequired = item.getMincap();
-
-			int currentlyTotalAmount = item.getInStsoreAvailable() + item.getStockAvailable();
-
-
-
-			if(minimumRequired > currentlyTotalAmount){
-
-				System.out.println("You have to buy more items for the stock");
-
-				return true;
-
-			}
-
-			else{
-
-				System.out.println("The stock is good for now");
-
-				return true;
-
-			}
-
-		}
-
-		catch(Exception e){
-
-			System.err.println("Error" +  e.getClass().getName() + ": " + e.getMessage() );
-
-			return false;
-
-		}
-
-	}
-
 
 
 	/**
@@ -494,12 +462,13 @@ public class InventoryManager {
 			int currentInStoreValue = item.getInStsoreAvailable();
 
 			int newAmount = currentInStoreValue - amount;
-			if(newAmount<0) newAmount = 30; //just for testing
 
 
 			inventory.findOneAndUpdate(eq("location", location),
 
 					combine(set("inStoreAvailable",newAmount )));
+			
+			this.notifySensor(item);
 
 
 //			System.out.println("After the user buys the item the file was updated Successfully");

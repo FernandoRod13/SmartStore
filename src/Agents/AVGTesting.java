@@ -17,8 +17,9 @@ public class AVGTesting {
 		InventoryManager.getInstance().DBInit();
 		UserManager.getInstance().DBInit();
 		TransactionManager.getInstance().DBInit();
-//		addTransactions(3,5,20, Calendar.JUNE);
 		runAgent();
+
+		addTransactions(3,5,20, Calendar.JANUARY);
 
 	}
 

@@ -1,14 +1,9 @@
 package Agents;
-import Inventory.InventoryManager;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 
 import Inventory.InventoryManager;
 import Inventory.Item;
 import Inventory.ListItem;
-import Inventory.Location;
 
 public class User {
 	private String id;
@@ -41,7 +36,9 @@ public class User {
 		virtualCart.add(newListItem);
 		InventoryManager.getInstance().userBuysItem(item.getLocation(), qty);
 		totalPriceInCart+=item.getRetailPrice()*qty;
-
+		
+		//notifies the Sensor which then decides to refill or not
+//		InventoryManager.getInstance().notifySensor(item);
 	}
 	
 
@@ -56,8 +53,9 @@ public class User {
 		virtualCart.remove(indexOfItem);
 		InventoryManager.getInstance().userReturnsItem(item.getLocation(), qty);
 		totalPriceInCart-=item.getRetailPrice()*qty;
-
 		
+		//notifies the Sensor which then decides to refill or not
+//		InventoryManager.getInstance().notifySensor(item);		
 
 	}
 	
