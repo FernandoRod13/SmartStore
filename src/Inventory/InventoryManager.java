@@ -566,8 +566,8 @@ public class InventoryManager {
 		boolean isLeft = locationDoc.getBoolean("isLeft");
 		int column = locationDoc.getInteger("column");
 		int row = locationDoc.getInteger("row");
-		
-		Location location = new Location(container, isLeft, column, row);
+		int node = locationDoc.getInteger("nodeIndex");
+		Location location = new Location(container, isLeft, column, row, node);
 	
 		newItem = new Item(objectID, item.getString("name"), item.getDouble("retailPrice"),
 				item.getString("category"), item.getInteger("mincap"),item.getInteger("maxcap"),

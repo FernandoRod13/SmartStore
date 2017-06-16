@@ -85,13 +85,14 @@ public class RouteGenerator {
 				break;
 			}
 		}
-		System.out.println(visited);
+		//System.out.println(visited);
 		Stack<Integer> reverseTrace = new Stack<>();
 		Integer trackingIndex = nodeIndex;
 		reverseTrace.push(trackingIndex);
 		while(reverseTrace.peek() != current.getIndex()) {
-			reverseTrace.push(trackingIndex);
+			//reverseTrace.push(trackingIndex);
 			trackingIndex = visited.get(trackingIndex);
+			reverseTrace.push(trackingIndex);
 		}
 		trace.add(current);
 		reverseTrace.pop();
