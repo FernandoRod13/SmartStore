@@ -11,6 +11,7 @@ public class Node {
 	private boolean isEntry;
 	private boolean isExit;
 	private int index;
+	private int parent;
 	
 	public Node(int index) {
 		super();
@@ -19,6 +20,7 @@ public class Node {
 		this.isEntry = false;
 		this.isExit = false;
 		this.index = index;
+		this.parent = -1;
 	}
 
 	public ArrayList<Node> getNeighbors() {
@@ -60,5 +62,15 @@ public class Node {
 	public void setindex(int index) {
 		this.index = index;
 	}
+
+	public int getParent() {
+		return parent;
+	}
+
+	public void setParent(int parent) {
+		this.parent = parent;
+	}
+	
+	
 	
 }

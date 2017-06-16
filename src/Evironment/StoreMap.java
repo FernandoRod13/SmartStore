@@ -12,9 +12,10 @@ import Inventory.Location;
 public class StoreMap {
 	private Node entry;
 	private Node exit;
+	private ArrayList<Node> graph;
 	
 	public StoreMap() throws FileNotFoundException, IOException{
-		ArrayList<Node> graph = new ArrayList<>();
+		graph = new ArrayList<>();
 		for(int i = 0; i<45; i++) {
 			 graph.add(new Node(i));
 		}
@@ -65,6 +66,10 @@ public class StoreMap {
 
 	public Node getExit() {
 		return exit;
+	}
+	
+	public ArrayList<Node> getGraph() {
+		return graph;
 	}
 	
 	
